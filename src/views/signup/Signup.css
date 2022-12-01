@@ -1,0 +1,21 @@
+.main-container {
+    background-color: #fff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 1em;
+    color: #000;
+  }
+
+.connexion-other {
+    margin: 20px;
+    text-align: center;
+    font-size: 0.8em;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
