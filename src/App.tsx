@@ -5,6 +5,8 @@ import Home from './views/home/Home';
 import Login from './views/login/Login';
 import Signup from './views/signup/Signup';
 import SignupCode from './views/signup/Signup-code';
+import ListMessage from './views/message/ListMessage';
+import Message from './views/message/Message';
 
 function App() {
 
@@ -17,6 +19,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/code" element={<SignupCode />} />
+          <Route path="/listMessage" element={<ListMessage />} />
+          <Route path="/message" element={<Message />} />
         </Routes>
       </header>
     </div>
