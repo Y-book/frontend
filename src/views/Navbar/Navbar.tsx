@@ -11,11 +11,14 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
+import { HiHome } from 'react-icons/hi';
 import SmsIcon from '@mui/icons-material/Sms';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import SettingsIcon from '@mui/icons-material/Settings';
 import PeopleIcon from '@mui/icons-material/People';
+import Link, { NavLink } from 'react-router-dom';
+import { MenuList } from '@mui/material';
 
 
 const Search = styled('div')(({ theme }) => ({
@@ -63,18 +66,13 @@ const Search = styled('div')(({ theme }) => ({
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
       React.useState<null | HTMLElement>(null);
   
-    const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-  
-    const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-      setAnchorEl(event.currentTarget);
-    };
   
     const handleMobileMenuClose = () => {
       setMobileMoreAnchorEl(null);
     };
   
-    const handleMenuClose = () => {
+    const CloseAfterCLick = () => {
       setAnchorEl(null);
       handleMobileMenuClose();
     };
@@ -100,7 +98,19 @@ const Search = styled('div')(({ theme }) => ({
         open={isMobileMenuOpen}
         onClose={handleMobileMenuClose}
       >
-        <MenuItem>
+        <MenuList>
+        <NavLink to="/" style={{ textDecoration: 'none', display: 'block', color: "inherit"}}>
+        <MenuItem onClick={CloseAfterCLick}>
+          <IconButton size="large" color="inherit">
+            <Badge color="error">
+              <HiHome />
+            </Badge>
+          </IconButton>
+          <p>Accueil</p>
+        </MenuItem>
+        </NavLink>
+        <NavLink to="/listMessage" style={{ textDecoration: 'none', display: 'block', color: "inherit"}}>
+        <MenuItem onClick={CloseAfterCLick}>
           <IconButton size="large" aria-label="show 4 new mails" color="inherit">
             <Badge color="error">
               <SmsIcon />
@@ -108,7 +118,8 @@ const Search = styled('div')(({ theme }) => ({
           </IconButton>
           <p>Messages</p>
         </MenuItem>
-        <MenuItem>
+        </NavLink>
+        <MenuItem onClick={CloseAfterCLick}>
           <IconButton
             size="large"
             color="inherit"
@@ -119,7 +130,7 @@ const Search = styled('div')(({ theme }) => ({
           </IconButton>
           <p>Notifications</p>
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={CloseAfterCLick}>
           <IconButton
             size="large"
             color="inherit"
@@ -130,7 +141,7 @@ const Search = styled('div')(({ theme }) => ({
           </IconButton>
           <p>Amis</p>
         </MenuItem>
-        <MenuItem onClick={handleProfileMenuOpen}>
+        <MenuItem onClick={CloseAfterCLick}>
           <IconButton
             size="large"
             aria-label="account of current user"
@@ -142,7 +153,7 @@ const Search = styled('div')(({ theme }) => ({
           </IconButton>
           <p>Profile</p>
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={CloseAfterCLick}>
           <IconButton
             size="large"
             color="inherit"
@@ -153,13 +164,15 @@ const Search = styled('div')(({ theme }) => ({
           </IconButton>
           <p>Settings</p>
         </MenuItem>
+      </MenuList>
       </Menu>
     );
   
     return (
       <Box sx={{ flexGrow: 1, width: '100%' }}>
         <AppBar position="static">
-          <Toolbar>            
+          <Toolbar>
+          <NavLink to="/" style={{ textDecoration: 'none', display: 'block', color: "inherit"}}>         
             <Typography
               variant="h6"
               noWrap
@@ -168,6 +181,7 @@ const Search = styled('div')(({ theme }) => ({
             >
               Y-Book
             </Typography>
+            </NavLink>  
             <Search>
               <SearchIconWrapper>
                 <SearchIcon />
@@ -179,11 +193,13 @@ const Search = styled('div')(({ theme }) => ({
             </Search>
             <Box sx={{ flexGrow: 1 }} />
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+            <NavLink to="/listMessage" style={{ textDecoration: 'none', display: 'block', color: "inherit"}}>
               <IconButton size="large" aria-label="show 4 new mails" color="inherit">
                 <Badge color="error">
                   <SmsIcon />
                 </Badge>
               </IconButton>
+              </NavLink>
               <IconButton
                 size="large"
                 color="inherit"
