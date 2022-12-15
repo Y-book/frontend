@@ -4,6 +4,9 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { Button } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { AuthenticationDetails, CognitoUser } from 'amazon-cognito-identity-js';
+import { userPool } from '../../index';
+import AWS from 'aws-sdk';
 
 const Login: React.FC = () => {
     const [email, setEmail] = React.useState('');
@@ -20,6 +23,38 @@ const Login: React.FC = () => {
     function connection() {
         console.log(email);
         console.log(password);
+
+        if (email !== '' && password !== '') {
+            const authenticationData = {
+                Username: email,
+                Password: password,
+            };
+            const authenticationDetails = new AuthenticationDetails(
+                authenticationData
+            );
+            const userData = {
+                Username: email,
+                Pool: userPool,
+            };
+
+            const cognitoUser = new CognitoUser(userData);
+
+            cognitoUser.authenticateUser(authenticationDetails, {
+                onSuccess: function (result) {
+                    const accessToken = result.getAccessToken().getJwtToken();
+                    console.log("accessToken", accessToken);
+                    
+                    /* Use the idToken for Logins Map when Federating User Pools with identity pools or when passing through an Authorization Header to an API Gateway Authorizer */
+                    // var idToken = result.idToken.jwtToken;
+                },
+        
+                onFailure: function(err) {
+                    alert(err);
+                },
+            });
+        } else {
+            alert("Merci de renseigner tous les champs");
+        }
     }
 
     return (
