@@ -3,9 +3,13 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { Button } from '@mui/material';
 import "./Signup.css";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { CognitoUserAttribute } from 'amazon-cognito-identity-js';
+import { userPool } from '../../index';
 
 const Signup: React.FC = () => {
+    const navigate = useNavigate();
+
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
     const [passwordConfirm, setPasswordConfirm] = React.useState('');
@@ -39,6 +43,21 @@ const Signup: React.FC = () => {
             console.log(email);
             console.log(password);
             console.log(passwordConfirm);
+            const name = lastName;
+            const given_name = firstName;
+            const user_name=new CognitoUserAttribute({Name:"name",Value:name});
+            const user_given_name=new CognitoUserAttribute({Name:"given_name",Value:given_name});
+            const user_email=new CognitoUserAttribute({Name:"email",Value:email});
+            console.log(email, password, name, given_name, email);
+            userPool.signUp(email, password, [user_name,user_given_name,user_email], [], (err, data) => {
+                      if (err) {
+                        console.error(err);
+                      } else {
+                        console.log(data);
+                        navigate('/code', { state: { email: email } });
+                      }
+                    });
+            navigate('/code', { state: { email: email } });
         } else {
             alert("Les mots de passe ne correspondent pas");
         }
