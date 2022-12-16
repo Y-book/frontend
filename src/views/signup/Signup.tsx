@@ -51,7 +51,12 @@ const Signup: React.FC = () => {
                             alert("L'adresse mail est déjà utilisée");
                         }
                       } else {
-                        navigate('/code', { state: { email: email } });
+                        try {
+                            navigate('/code', { state: { email: email, firstName: firstName, lastName: lastName } });
+                        } catch (error) {
+                            console.log(error);
+                        }
+                        
                       }
                     });
         } else {

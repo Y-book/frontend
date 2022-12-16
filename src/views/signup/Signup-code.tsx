@@ -5,16 +5,36 @@ import { Button } from '@mui/material';
 import { CognitoUser } from 'amazon-cognito-identity-js';
 import { userPool } from '../../index';
 import { useNavigate, useLocation } from 'react-router-dom';
+import axios from 'axios';
 
 const SignupCode: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
     const email = location.state.email;
+    const firstName = location.state.firstName;
+    const lastName = location.state.lastName;
+
     const [code, setCode] = React.useState('');
 
     function changeCode(event: React.ChangeEvent<HTMLInputElement>) {
         setCode(event.target.value);
+    }
+
+    function createUser(email: string, firstName: string, lastName: string) {
+        const data = {
+            email: email,
+            firstname: firstName,
+            lastname: lastName,
+        };
+        axios.post('/user', data)
+          .then(function (response) {
+            console.log(response);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+        
     }
 
     function confirm() {
@@ -31,6 +51,7 @@ const SignupCode: React.FC = () => {
                     alert(err.message || JSON.stringify(err));
                     return;
                 } else {
+                    createUser(email, firstName, lastName);
                     navigate('/login');
                 }
             });
