@@ -38,27 +38,19 @@ const Signup: React.FC = () => {
 
     function connection() {
         if (password === passwordConfirm) {
-            console.log(firstName);
-            console.log(lastName);
-            console.log(email);
-            console.log(password);
-            console.log(passwordConfirm);
             const name = lastName;
             const given_name = firstName;
             const user_name=new CognitoUserAttribute({Name:"name",Value:name});
             const user_given_name=new CognitoUserAttribute({Name:"given_name",Value:given_name});
             const user_email=new CognitoUserAttribute({Name:"email",Value:email});
-            console.log(email, password, name, given_name, email);
             userPool.signUp(email, password, [user_name,user_given_name,user_email], [], (err, data) => {
                       if (err) {
-                        console.log(err.message);
                         if (err.message.includes("Password did not conform with policy")) {
                             alert("Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial");
                         } else if (err.message === "An account with the given email already exists.") {
                             alert("L'adresse mail est déjà utilisée");
                         }
                       } else {
-                        console.log(data);
                         navigate('/code', { state: { email: email } });
                       }
                     });

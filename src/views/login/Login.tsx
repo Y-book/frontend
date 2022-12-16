@@ -20,9 +20,6 @@ const Login: React.FC = () => {
     }
 
     function connection() {
-        console.log(email);
-        console.log(password);
-
         if (email !== '' && password !== '') {
             const authenticationData = {
                 Username: email,
@@ -80,7 +77,7 @@ const Login: React.FC = () => {
             <Button color='inherit' variant="contained" onClick={connection}>Se connecter</Button>
             <Box sx={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
                 <div className='connexion-other'>
-                    <a href='/'>Mot de passe oublié</a>
+                    <a href='/reset-password'>Mot de passe oublié</a>
                 </div>
                 <div className='connexion-other'>
                     <Link to="/signup"> S'enregistrer </Link>

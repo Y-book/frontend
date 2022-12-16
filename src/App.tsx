@@ -5,6 +5,7 @@ import Home from './views/home/Home';
 import Login from './views/login/Login';
 import Signup from './views/signup/Signup';
 import SignupCode from './views/signup/Signup-code';
+import ResetPassword from './views/login/ResetPassword';
 
 function App() {
 
@@ -17,6 +18,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/code" element={<SignupCode />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
         </Routes>
       </header>
     </div>

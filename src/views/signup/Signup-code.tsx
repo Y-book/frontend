@@ -19,14 +19,10 @@ const SignupCode: React.FC = () => {
 
     function confirm() {
         if (code !== '') {
-            console.log(code);
             const userData = {
                 Username: email,
                 Pool: userPool
             };
-
-            console.log(userData);
-            
 
             const cognitoUser = new CognitoUser(userData);
 
@@ -35,7 +31,6 @@ const SignupCode: React.FC = () => {
                     alert(err.message || JSON.stringify(err));
                     return;
                 } else {
-                    console.log('call result: ' + result);
                     navigate('/login');
                 }
             });
