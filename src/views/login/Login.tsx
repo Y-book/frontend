@@ -6,7 +6,6 @@ import { Button } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { AuthenticationDetails, CognitoUser } from 'amazon-cognito-identity-js';
 import { userPool } from '../../index';
-import AWS from 'aws-sdk';
 
 const Login: React.FC = () => {
     const [email, setEmail] = React.useState('');
@@ -43,6 +42,9 @@ const Login: React.FC = () => {
                 onSuccess: function (result) {
                     const accessToken = result.getAccessToken().getJwtToken();
                     console.log("accessToken", accessToken);
+
+                    const refresh = result.getRefreshToken().getToken();
+                    console.log("RefreshToken: " + refresh);
                     
                     /* Use the idToken for Logins Map when Federating User Pools with identity pools or when passing through an Authorization Header to an API Gateway Authorizer */
                     // var idToken = result.idToken.jwtToken;

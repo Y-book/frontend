@@ -51,13 +51,17 @@ const Signup: React.FC = () => {
             console.log(email, password, name, given_name, email);
             userPool.signUp(email, password, [user_name,user_given_name,user_email], [], (err, data) => {
                       if (err) {
-                        console.error(err);
+                        console.log(err.message);
+                        if (err.message.includes("Password did not conform with policy")) {
+                            alert("Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial");
+                        } else if (err.message === "An account with the given email already exists.") {
+                            alert("L'adresse mail est déjà utilisée");
+                        }
                       } else {
                         console.log(data);
                         navigate('/code', { state: { email: email } });
                       }
                     });
-            navigate('/code', { state: { email: email } });
         } else {
             alert("Les mots de passe ne correspondent pas");
         }
