@@ -6,6 +6,7 @@ import { Button } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { AuthenticationDetails, CognitoUser } from 'amazon-cognito-identity-js';
 import { userPool } from '../../index';
+import axios from 'axios';
 
 const Login: React.FC = () => {
     const [email, setEmail] = React.useState('');
@@ -37,6 +38,8 @@ const Login: React.FC = () => {
 
             cognitoUser.authenticateUser(authenticationDetails, {
                 onSuccess: function (result) {
+                    console.log(result);
+                    
                     const accessToken = result.getAccessToken().getJwtToken();
                     console.log("accessToken", accessToken);
 
@@ -44,11 +47,13 @@ const Login: React.FC = () => {
                     console.log("RefreshToken: " + refresh);
                     
                     /* Use the idToken for Logins Map when Federating User Pools with identity pools or when passing through an Authorization Header to an API Gateway Authorizer */
-                    // var idToken = result.idToken.jwtToken;
+                    const idToken = result.getIdToken().getJwtToken();
+                    console.log("idToken", idToken);
                 },
         
                 onFailure: function(err) {
-                    alert(err);
+                    console.log(err.message);
+                    alert("Une erreur s'est produite. Veuillez vérifier les informations saisies.");
                 },
             });
         } else {
