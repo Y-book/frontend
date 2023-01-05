@@ -6,7 +6,7 @@ import { Button } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { AuthenticationDetails, CognitoUser } from 'amazon-cognito-identity-js';
 import { userPool } from '../../index';
-import AWS from 'aws-sdk';
+import axios from 'axios';
 
 const Login: React.FC = () => {
     const [email, setEmail] = React.useState('');
@@ -21,9 +21,6 @@ const Login: React.FC = () => {
     }
 
     function connection() {
-        console.log(email);
-        console.log(password);
-
         if (email !== '' && password !== '') {
             const authenticationData = {
                 Username: email,
@@ -41,15 +38,22 @@ const Login: React.FC = () => {
 
             cognitoUser.authenticateUser(authenticationDetails, {
                 onSuccess: function (result) {
+                    console.log(result);
+                    
                     const accessToken = result.getAccessToken().getJwtToken();
                     console.log("accessToken", accessToken);
+
+                    const refresh = result.getRefreshToken().getToken();
+                    console.log("RefreshToken: " + refresh);
                     
                     /* Use the idToken for Logins Map when Federating User Pools with identity pools or when passing through an Authorization Header to an API Gateway Authorizer */
-                    // var idToken = result.idToken.jwtToken;
+                    const idToken = result.getIdToken().getJwtToken();
+                    console.log("idToken", idToken);
                 },
         
                 onFailure: function(err) {
-                    alert(err);
+                    console.log(err.message);
+                    alert("Une erreur s'est produite. Veuillez vérifier les informations saisies.");
                 },
             });
         } else {
@@ -78,7 +82,7 @@ const Login: React.FC = () => {
             <Button color='inherit' variant="contained" onClick={connection}>Se connecter</Button>
             <Box sx={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
                 <div className='connexion-other'>
-                    <a href='/'>Mot de passe oublié</a>
+                    <a href='/reset-password'>Mot de passe oublié</a>
                 </div>
                 <div className='connexion-other'>
                     <Link to="/signup"> S'enregistrer </Link>

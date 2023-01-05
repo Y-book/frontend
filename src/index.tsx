@@ -6,12 +6,18 @@ import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter} from 'react-router-dom';
 import { CognitoUserPool } from 'amazon-cognito-identity-js';
+import axios from 'axios';
 
 const poolData = {
   UserPoolId: process.env.REACT_APP_AWS_COGNITO_USERPOOLID || '',
   ClientId: process.env.REACT_APP_AWS_COGNITO_CLIENTID || ''
 };
 export const userPool = new CognitoUserPool(poolData);
+
+axios.defaults.baseURL = 'http://127.0.0.1:8000';
+axios.defaults.headers.post['Content-Type'] ='application/x-www-form-urlencoded';
+axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
+console.log(axios.defaults);
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
