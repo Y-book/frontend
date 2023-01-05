@@ -6,13 +6,15 @@ import Login from './views/login/Login';
 import Signup from './views/signup/Signup';
 import SignupCode from './views/signup/Signup-code';
 import ResetPassword from './views/login/ResetPassword';
+import { UserAccountProvider } from './provider/UserProvider';
 
 function App() {
 
   return (
     <div className="App">
       <header className="App-header">
-      <Navbar />
+      <UserAccountProvider>
+        <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
@@ -20,6 +22,7 @@ function App() {
           <Route path="/code" element={<SignupCode />} />
           <Route path="/reset-password" element={<ResetPassword />} />
         </Routes>
+      </UserAccountProvider>
       </header>
     </div>
   );
