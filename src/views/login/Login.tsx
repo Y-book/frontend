@@ -1,16 +1,17 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import "./Login.css";
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { Button } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { AuthenticationDetails, CognitoUser } from 'amazon-cognito-identity-js';
-import { userPool } from '../../index';
-import axios from 'axios';
+import { UserAccountContext } from '../../provider/UserProvider';
 
 const Login: React.FC = () => {
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
+
+    const {authenticate} = useContext(UserAccountContext)
+    const {getSession} = useContext(UserAccountContext)
 
     function changeMail(event: React.ChangeEvent<HTMLInputElement>) {
         setEmail(event.target.value);
@@ -22,40 +23,7 @@ const Login: React.FC = () => {
 
     function connection() {
         if (email !== '' && password !== '') {
-            const authenticationData = {
-                Username: email,
-                Password: password,
-            };
-            const authenticationDetails = new AuthenticationDetails(
-                authenticationData
-            );
-            const userData = {
-                Username: email,
-                Pool: userPool,
-            };
-
-            const cognitoUser = new CognitoUser(userData);
-
-            cognitoUser.authenticateUser(authenticationDetails, {
-                onSuccess: function (result) {
-                    console.log(result);
-                    
-                    const accessToken = result.getAccessToken().getJwtToken();
-                    console.log("accessToken", accessToken);
-
-                    const refresh = result.getRefreshToken().getToken();
-                    console.log("RefreshToken: " + refresh);
-                    
-                    /* Use the idToken for Logins Map when Federating User Pools with identity pools or when passing through an Authorization Header to an API Gateway Authorizer */
-                    const idToken = result.getIdToken().getJwtToken();
-                    console.log("idToken", idToken);
-                },
-        
-                onFailure: function(err) {
-                    console.log(err.message);
-                    alert("Une erreur s'est produite. Veuillez vérifier les informations saisies.");
-                },
-            });
+            authenticate(email, password).then(getSession())
         } else {
             alert("Merci de renseigner tous les champs");
         }

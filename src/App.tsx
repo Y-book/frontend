@@ -9,6 +9,7 @@ import ListMessage from './views/messaging/ListMessage';
 import ChatPage from './views/messaging/ChatPage';
 // import { io } from "socket.io-client";
 import ResetPassword from './views/login/ResetPassword';
+import { UserAccountProvider } from './provider/UserProvider';
 
 // const socket = io();
 // socket.connect();
@@ -18,7 +19,8 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-      <Navbar />
+      <UserAccountProvider>
+        <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
@@ -28,6 +30,7 @@ function App() {
           // <Route path="message" element={<ChatPage socket={socket} />} />
           <Route path="/reset-password" element={<ResetPassword />} />
         </Routes>
+      </UserAccountProvider>
       </header>
     </div>
   );
