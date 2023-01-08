@@ -3,10 +3,12 @@ import "./Login.css";
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { Button } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { UserAccountContext } from '../../provider/UserProvider';
 
 const Login: React.FC = () => {
+    const navigate = useNavigate();
+
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
 
@@ -23,7 +25,9 @@ const Login: React.FC = () => {
 
     function connection() {
         if (email !== '' && password !== '') {
-            authenticate(email, password).then(getSession())
+            authenticate(email, password)
+            .then(getSession())
+            .then(navigate('/newsfeed'))
         } else {
             alert("Merci de renseigner tous les champs");
         }
