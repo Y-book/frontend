@@ -20,6 +20,7 @@ import axios from 'axios';
 import { UserAccountContext } from '../../provider/UserProvider';
 import jwt_decode from "jwt-decode";
 import { Fab, InputAdornment, TextField } from '@mui/material';
+import "./NewsFeed.css";
 
 type Props = {
     value: any;
@@ -56,6 +57,9 @@ const NewsFeedCard: React.FC<Props> = (props) => {
     const [connectedUser, setConnectedUser] = React.useState('');
     const [edit, setEdit] = React.useState(false);
     const [text, setText] = React.useState(props.value.htmlContent);
+    const [like, setLike] = React.useState(false);
+    const [likeCount, setLikeCount] = React.useState(0);
+    const [likeData, setLikeData] = React.useState<any>({});
 
     const post = props.value;
 
@@ -69,18 +73,35 @@ const NewsFeedCard: React.FC<Props> = (props) => {
                 setConnectedUser(decoded?.email)
             }
         });
-    if (!user) {
-        axios.get('/users/' + post.userId)
+        if (!user) {
+            axios.get('/users/' + post.userId)
+            .then(function (response) {
+                setUser(response.data);
+                setLetter(response.data.firstname[0].toUpperCase());
+                const finalDate = dateCompare(post.createdAt)
+                setDate(finalDate);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        }
+        axios.get('/likes/post/' + post.id + '/all')
         .then(function (response) {
-            setUser(response.data);
-            setLetter(response.data.firstname[0].toUpperCase());
-            const finalDate = dateCompare(post.createdAt)
-            setDate(finalDate);
+            setLikeCount(response.data.length);
         })
         .catch(function (error) {
             console.log(error);
         });
-    }
+        axios.get('/likes/post/' + post.id)
+        .then(function (response) {
+            if (response.data[0]) {
+                setLike(true);
+                setLikeData(response.data[0]);
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
     }, [])
 
     function dateCompare(createdAt: string){
@@ -138,6 +159,35 @@ const NewsFeedCard: React.FC<Props> = (props) => {
         setEdit(false);
     }
 
+    function handleLike () {
+        const data = {
+            postId: post.id,
+            userId: 15
+        };
+
+        if (like) {
+            axios.delete('/likes/' + likeData.id)
+            .then(function (response) {
+                setLike(false);
+                setLikeCount(likeCount - 1);
+                setLikeData({});
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        } else {
+            axios.post('/likes', data)
+            .then(function (response) {
+                setLike(true);
+                setLikeCount(likeCount + 1);
+                setLikeData(response.data);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        }
+    }
+
     return (
         <Card sx={{ maxWidth: 345 }}>
         <CardHeader
@@ -191,9 +241,12 @@ const NewsFeedCard: React.FC<Props> = (props) => {
             
         </CardContent>
         <CardActions disableSpacing>
-            <IconButton aria-label="add to favorites">
-                <FavoriteIcon />
-            </IconButton>
+            {connectedUser && user && connectedUser !== user.email ?
+            <IconButton aria-label="add to favorites" onClick={handleLike}>
+                <FavoriteIcon /> <span className='comments-count'>{likeCount}</span>
+            </IconButton> : <IconButton aria-label="add to favorites">
+                <FavoriteIcon /> <span className='comments-count'>{likeCount}</span>
+            </IconButton>}
             <IconButton aria-label="share">
                 <ShareIcon />
             </IconButton>
