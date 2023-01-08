@@ -1,6 +1,7 @@
 import React,{createContext} from "react"
 import {AuthenticationDetails, CognitoUser, CognitoUserSession } from "amazon-cognito-identity-js"
 import { userPool } from '../index';
+import axios from 'axios';
 
 export const UserAccountContext = createContext(null as any);
 
@@ -15,9 +16,10 @@ export const UserAccountProvider: React.FC<{children?: React.ReactElement|React.
                         reject(err);
 
                     } else {
-                       console.log("session " +session.isValid()) ;
+                    //    console.log("session " +session.isValid()) ;
                     //    console.log(session.getIdToken().getJwtToken());
-                       
+                        const idToken = session.getIdToken().getJwtToken();
+                        axios.defaults.headers.common['token'] = idToken;
                         resolve({session});
                     }
                 });
@@ -29,20 +31,19 @@ export const UserAccountProvider: React.FC<{children?: React.ReactElement|React.
         })
     }
 
-    const authenticate = async (Username:string,Password:string)=>{
-        console.log("authenticate : ", Username,Password);
-        
+    const authenticate = async (Username:string,Password:string)=>{        
         return await new Promise<{data:CognitoUserSession}>((resolve,reject)=>{
             const user = new CognitoUser({Username, Pool: userPool})
             const authDetails = new AuthenticationDetails({Username,Password})
             user.authenticateUser(authDetails,{
                 onSuccess:(data)=>{
-                    const accessToken = data.getAccessToken().getJwtToken()
-                    console.log("Connexion reussie ! accessToken:",accessToken)
+                    // const accessToken = data.getAccessToken().getJwtToken()
+                    // console.log("Connexion reussie ! accessToken:",accessToken)
                     // const refresh = data.getRefreshToken().getToken();
                     // console.log("Connexion reussie ! refresh:",refresh)
                     // /* Use the idToken for Logins Map when Federating User Pools with identity pools or when passing through an Authorization Header to an API Gateway Authorizer */
-                    // const idToken = data.getIdToken().getJwtToken();
+                    const idToken = data.getIdToken().getJwtToken();
+                    axios.defaults.headers.common['token'] = idToken;
                     // console.log("Connexion reussie ! idToken:",idToken)
                     resolve({data})
                 },
@@ -64,6 +65,7 @@ export const UserAccountProvider: React.FC<{children?: React.ReactElement|React.
         const user = userPool.getCurrentUser();
         if (user) {
             user.signOut();
+            axios.defaults.headers.common['token'] = "";
             console.log("logout")
         }
     }
