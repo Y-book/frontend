@@ -27,7 +27,7 @@ const SignupCode: React.FC = () => {
             firstname: firstName,
             lastname: lastName,
         };
-        axios.post('/user', data)
+        axios.post('/users', data)
           .then(function (response) {
             console.log(response);
           })
