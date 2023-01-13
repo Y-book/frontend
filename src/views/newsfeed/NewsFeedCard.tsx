@@ -19,19 +19,42 @@ import CloseIcon from '@mui/icons-material/Close';
 import axios from 'axios';
 import { UserAccountContext } from '../../provider/UserProvider';
 import jwt_decode from "jwt-decode";
-import { Fab, InputAdornment, TextField } from '@mui/material';
+import { Divider, Fab, InputAdornment, TextField } from '@mui/material';
+import Comments from '../comments/Comments';
+import { useNavigate } from 'react-router-dom';
 import "./NewsFeed.css";
 
 type Props = {
-    value: any;
+    value: Post,
+    getPosts: (setPosts: React.Dispatch<React.SetStateAction<[] | Post[]>>) => void,
+    setPosts: React.Dispatch<React.SetStateAction<[] | Post[]>>,
+    posts: Post[],
 }
 
-type User = {
+export type Post = {
+    id: number,
+    createdAt: string,
+    updatedAt: string,
+    userId: number,
+    htmlContent: string,
+}
+
+export type User = {
     id: number;
     firstname: string;
     lastname: string;
     email: string;
 }
+
+export type Comment = {
+    id: number,
+    createdAt: string,
+    updatedAt: string,
+    userId: number,
+    postId: number,
+    text: string,
+}
+
 
 interface ExpandMoreProps extends IconButtonProps {
     expand: boolean;
@@ -48,7 +71,22 @@ interface ExpandMoreProps extends IconButtonProps {
     }),
   }));
 
+const getComments = (post: Post, setComments: React.Dispatch<React.SetStateAction<[] | Comment[]>>, comments: Comment[]) => {
+    axios.get('/comments/post/' + post.id)
+            .then(function (response) {
+                const commentsInResponse = response.data;
+                commentsInResponse.sort((a: any, b: any) => {
+                    return a.id - b.id;
+                });
+                setComments(commentsInResponse);
+            })
+            .catch(function (error) {
+            console.log(error);
+            });
+}
+
 const NewsFeedCard: React.FC<Props> = (props) => {
+    const navigate = useNavigate();
     const {getSession} = useContext(UserAccountContext)
     const [expanded, setExpanded] = React.useState(false);
     const [user, setUser] = React.useState<User>();
@@ -60,10 +98,9 @@ const NewsFeedCard: React.FC<Props> = (props) => {
     const [like, setLike] = React.useState(false);
     const [likeCount, setLikeCount] = React.useState(0);
     const [likeData, setLikeData] = React.useState<any>({});
-
-    const post = props.value;
-
-    // let edit = false;
+    const [comments, setComments] = React.useState<Comment[] | []>([]);
+    const [comment, setComment] = React.useState('');
+    const [post] = React.useState(props.value);
 
     useEffect(() => {
         getSession().then((res: any) => {
@@ -71,6 +108,8 @@ const NewsFeedCard: React.FC<Props> = (props) => {
                 const token = res.session.idToken.jwtToken;
                 const decoded: {email: string} = jwt_decode(token);
                 setConnectedUser(decoded?.email)
+            } else {
+                navigate('/login');
             }
         });
         if (!user) {
@@ -102,7 +141,7 @@ const NewsFeedCard: React.FC<Props> = (props) => {
         .catch(function (error) {
             console.log(error);
         });
-    }, [])
+    }, [getSession, post.createdAt, post.userId, user, post.id, comments, navigate])
 
     function dateCompare(createdAt: string){
         const today = new Date();
@@ -126,18 +165,30 @@ const NewsFeedCard: React.FC<Props> = (props) => {
 
     const handleExpandClick = () => {
         setExpanded(!expanded);
+        if (comments.length === 0) {
+            getComments(post, setComments, comments)
+        } else {
+            setComments([])
+        }
     };
 
     const openEdit = () => {
         setEdit(true);
     }
 
-    const deleteItem = () => {
-        axios.delete('/posts/' + post.id)
+    const deleteItem = async () => {
+        await axios.delete('/posts/' + post.id)
+        setTimeout(() => {
+            window.location.reload();
+        }, 2000);
     }
     
     function changeText(event: React.ChangeEvent<HTMLInputElement>) {
         setText(event.target.value);
+    }
+
+    function changeCommentText(event: React.ChangeEvent<HTMLInputElement>) {
+        setComment(event.target.value);
     }
 
     function confirmEdit () {
@@ -149,6 +200,7 @@ const NewsFeedCard: React.FC<Props> = (props) => {
         axios.patch('/posts/' + post.id, data)
         .then(function (response) {
             setEdit(false);
+            post.htmlContent = text;
         })
         .catch(function (error) {
             console.log(error);
@@ -157,6 +209,25 @@ const NewsFeedCard: React.FC<Props> = (props) => {
 
     function closeEdit () {
         setEdit(false);
+    }
+
+    function sendComment() {
+        if (comment === '') {
+            return alert('Veuillez écrire un commentaire');
+        }
+        const data = {
+            text: comment,
+            userId: 15,
+            postId: post.id
+        };
+        axios.post('/comments', data)
+          .then(function (response) {
+            getComments(post, setComments, comments)
+            setComment('');
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
     }
 
     function handleLike () {
@@ -190,80 +261,104 @@ const NewsFeedCard: React.FC<Props> = (props) => {
 
     return (
         <Card sx={{ maxWidth: 345 }}>
-        <CardHeader
-            avatar={
-            <Avatar sx={{ bgcolor: grey[500] }} aria-label="recipe">
-                {letter}
-            </Avatar>
-            }
-            action={connectedUser && user && connectedUser === user.email ? 
-            <div>
-                {!edit ? 
+            <CardHeader
+                avatar={
+                <Avatar sx={{ bgcolor: grey[500] }} aria-label="recipe">
+                    {letter}
+                </Avatar>
+                }
+                action={connectedUser && user && connectedUser === user.email ? 
                 <div>
-                    <IconButton aria-label="edit" onClick={openEdit}>
-                        <EditIcon />
-                    </IconButton>
-                    <IconButton aria-label="delete" onClick={deleteItem}>
-                        <DeleteIcon />
-                    </IconButton>
+                    {!edit ? 
+                    <div>
+                        <IconButton aria-label="edit" onClick={openEdit}>
+                            <EditIcon />
+                        </IconButton>
+                        <IconButton aria-label="delete" onClick={deleteItem}>
+                            <DeleteIcon />
+                        </IconButton>
+                    </div>
+                    : 
+                    <div>
+                        <IconButton aria-label="confirm" onClick={confirmEdit}>
+                            <DoneIcon />
+                        </IconButton>
+                        <IconButton aria-label="close" onClick={closeEdit}>
+                            <CloseIcon />
+                        </IconButton>
+                    </div>}
                 </div>
-                : 
-                <div>
-                    <IconButton aria-label="edit" onClick={confirmEdit}>
-                        <DoneIcon />
-                    </IconButton>
-                    <IconButton aria-label="edit" onClick={closeEdit}>
-                        <CloseIcon />
-                    </IconButton>
-                </div>}
-            </div>
-            : <div></div>}
-            title={user && user.firstname && user.lastname ? user.firstname + ' ' + user.lastname : ''}
-            subheader={date ? "Publié " + date : ''}
-        />
+                : <div></div>}
+                title={user && user.firstname && user.lastname ? user.firstname + ' ' + user.lastname : ''}
+                subheader={date ? "Publié " + date : ''}
+            />
 
-        {/* <CardMedia
-            component="img"
-            height="194"
-            image="/static/images/cards/paella.jpg"
-            alt="Paella dish"
-        /> */}
-        <CardContent>
-            
-        {edit ? <div>
-            <TextField fullWidth value={text} id="quickText"
-            onChange={changeText} />
-        </div> : 
-        <Typography variant="body2" color="text.secondary">
-            {post.htmlContent}
-        </Typography>
-        }
-            
-        </CardContent>
-        <CardActions disableSpacing>
-            {connectedUser && user && connectedUser !== user.email ?
-            <IconButton aria-label="add to favorites" onClick={handleLike}>
-                <FavoriteIcon /> <span className='comments-count'>{likeCount}</span>
-            </IconButton> : <IconButton aria-label="add to favorites">
-                <FavoriteIcon /> <span className='comments-count'>{likeCount}</span>
-            </IconButton>}
-            <IconButton aria-label="share">
-                <ShareIcon />
-            </IconButton>
-            <ExpandMore
-            expand={expanded}
-            onClick={handleExpandClick}
-            aria-expanded={expanded}
-            aria-label="show more"
-            >
-                <ExpandMoreIcon />
-            </ExpandMore>
-        </CardActions>
-        <Collapse in={expanded} timeout="auto" unmountOnExit>
+            {/* <CardMedia
+                component="img"
+                height="194"
+                image="/static/images/cards/paella.jpg"
+                alt="Paella dish"
+            /> */}
             <CardContent>
-                <Typography paragraph>Commentaires</Typography>
+                
+            {edit ? <div>
+                <TextField fullWidth value={text} id="quickEditPost"
+                onChange={changeText} />
+            </div> : 
+            <Typography variant="body2" color="text.secondary">
+                {post.htmlContent}
+            </Typography>
+            }
+                
             </CardContent>
-        </Collapse>
+            <CardActions disableSpacing>
+                {connectedUser && user && connectedUser !== user.email ?
+                <IconButton aria-label="add to favorites" onClick={handleLike}>
+                    <FavoriteIcon /> <span className='comments-count'>{likeCount}</span>
+                </IconButton> : <IconButton aria-label="add to favorites">
+                    <FavoriteIcon /> <span className='comments-count'>{likeCount}</span>
+                </IconButton>}
+                <IconButton aria-label="share">
+                    <ShareIcon />
+                </IconButton>
+                <ExpandMore
+                expand={expanded}
+                onClick={handleExpandClick}
+                aria-expanded={expanded}
+                aria-label="show more"
+                >
+                    <ExpandMoreIcon />
+                </ExpandMore>
+            </CardActions>
+            <Collapse in={expanded} timeout="auto" unmountOnExit>
+                <div className='add-new-publication-container'>
+                    <TextField fullWidth label="Commentaire" id="quickComment"
+                    onChange={changeCommentText}
+                    value={comment}
+                    InputProps={{
+                        endAdornment: (
+                        <InputAdornment position="end" onClick={sendComment}>
+                            <Fab color="inherit" aria-label="add" size='small'>
+                                <span className='add-button-text'> {'>'} </span>
+                            </Fab>
+                        </InputAdornment>
+                        ),
+                    }} />
+                </div>
+                <div className='add-button'>
+                    <Fab color="default" aria-label="add" size='large'>
+                        <span className='add-button-text'>+</span>
+                    </Fab>
+                </div>
+                <CardContent>
+                    {comments.map((value, index) =>    
+                            <div key={index}>
+                                <Divider />
+                                <Comments value={value} connectedUser={connectedUser} getComments={getComments} post={post} setComments={setComments} comments={comments}></Comments>
+                            </div>
+                        )}
+                </CardContent>
+            </Collapse>
         </Card>
     );
 };
