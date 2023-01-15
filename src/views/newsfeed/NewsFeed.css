@@ -12,7 +12,7 @@
 .add-new-publication-container {
     width: 95%;
     height: 60px;
-    background-color: #f0f0f0;
+    /* background-color: #f0f0f0; */
     margin: 5px;
     margin-top: 20px;
 }
@@ -56,6 +56,10 @@
 
 .add-button-text {
     font-size: 35px;
+}
+
+.comments-count {
+    font-size: 12px;
 }
 
 
