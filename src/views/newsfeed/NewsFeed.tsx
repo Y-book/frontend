@@ -15,7 +15,6 @@ const getPosts = (setPosts: React.Dispatch<React.SetStateAction<[] | Post[]>>) =
             return b.id - a.id;
         });
         setPosts(posts);
-        console.log(posts);
         return posts;
     })
     .catch(function (error) {
