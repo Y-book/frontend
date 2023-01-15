@@ -15,7 +15,8 @@ const getPosts = (setPosts: React.Dispatch<React.SetStateAction<[] | Post[]>>) =
             return b.id - a.id;
         });
         setPosts(posts);
-        
+        console.log(posts);
+        return posts;
     })
     .catch(function (error) {
     console.log(error);
@@ -51,7 +52,6 @@ const NewsFeed: React.FC = () => {
         }
         const data = {
             htmlContent: text,
-            userId: 15
         };
         axios.post('/posts', data)
           .then(function (response) {
@@ -89,14 +89,9 @@ const NewsFeed: React.FC = () => {
 
                 {posts.map((value, index) =>    
                     <div className='feed-card' key={index}>
-                        <NewsFeedCard value={value} getPosts={getPosts} setPosts={setPosts} posts={posts}></NewsFeedCard>
+                        <NewsFeedCard post={value} getPosts={getPosts} setPosts={setPosts} posts={posts}></NewsFeedCard>
                     </div>
                 )}
-                
-                    {/* 
-                    <div className='feed-card'>
-                        <NewsFeedCard></NewsFeedCard>
-                    </div> */}
                 </div>
             </div>
         </div>

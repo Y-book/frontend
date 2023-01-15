@@ -1,9 +1,8 @@
 import "./Comments.css";
-import React, { useContext, useEffect } from 'react';
-import { UserAccountContext } from '../../provider/UserProvider';
+import React, { useEffect } from 'react';
 import axios from 'axios';
 import { Comment, Post, User } from '../newsfeed/NewsFeedCard';
-import { Avatar, Card, CardContent, CardHeader, IconButton, List, ListItem, ListItemAvatar, ListItemText, TextField, Typography } from "@mui/material";
+import { Avatar, IconButton, ListItem, ListItemAvatar, ListItemText, Typography } from "@mui/material";
 import { grey } from '@mui/material/colors';
 import { useNavigate } from "react-router-dom";
 import EditIcon from '@mui/icons-material/Edit';
@@ -13,10 +12,10 @@ import CloseIcon from '@mui/icons-material/Close';
 
 
 type Props = {
-    value: Comment,
+    comment: Comment,
     connectedUser: string,
-    getComments: (post: Post, setComments: React.Dispatch<React.SetStateAction<[] | Comment[]>>, comments: Comment[]) => void,
-    post: Post,
+    getPosts: (setPosts: React.Dispatch<React.SetStateAction<[] | Post[]>>) => void,
+    setPosts: React.Dispatch<React.SetStateAction<[] | Post[]>>,
     setComments: React.Dispatch<React.SetStateAction<[] | Comment[]>>,
     comments: Comment[],
 }
@@ -26,18 +25,8 @@ const Comments: React.FC<Props> = (props) => {
     const [letter, setLetter] = React.useState('');
     const [edit, setEdit] = React.useState(false);
     const [user, setUser] = React.useState<User>();
-    const [text, setText] = React.useState(props.value.text);
-
-    const comment = props.value;
-
-    // const comment = {   
-    //     id: 1,
-    //     createdAt: "2021-09-01T15:00:00.000Z",
-    //     updatedAt: "2021-09-01T15:00:00.000Z",
-    //     userId: 15,
-    //     postId: 21,
-    //     text: "Finally !",
-    // };
+    const [text, setText] = React.useState(props.comment.text);
+    const [comment] = React.useState<Comment>(props.comment);
 
     const connectedUser = props.connectedUser;
     if (connectedUser === '') {
@@ -69,14 +58,14 @@ const Comments: React.FC<Props> = (props) => {
     const deleteItem = () => {
         axios.delete('/comments/' + comment.id)
         .then(function (response) {
-            props.getComments(props.post, props.setComments, props.comments);
+            props.getPosts(props.setPosts);
+            props.setComments(props.comments.filter((item) => item.id !== comment.id));
         })
     }
 
     function confirmEdit () {
         const data = {
             text: text,
-            userId: 15,
             postId: comment.postId,
         };
         

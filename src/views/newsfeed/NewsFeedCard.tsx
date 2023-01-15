@@ -25,7 +25,7 @@ import { useNavigate } from 'react-router-dom';
 import "./NewsFeed.css";
 
 type Props = {
-    value: Post,
+    post: Post,
     getPosts: (setPosts: React.Dispatch<React.SetStateAction<[] | Post[]>>) => void,
     setPosts: React.Dispatch<React.SetStateAction<[] | Post[]>>,
     posts: Post[],
@@ -37,6 +37,12 @@ export type Post = {
     updatedAt: string,
     userId: number,
     htmlContent: string,
+    _count: {
+        postComments: number,
+        postLikes: number,
+    },
+    _liked: boolean,
+    postComments: Comment[],
 }
 
 export type User = {
@@ -71,20 +77,6 @@ interface ExpandMoreProps extends IconButtonProps {
     }),
   }));
 
-const getComments = (post: Post, setComments: React.Dispatch<React.SetStateAction<[] | Comment[]>>, comments: Comment[]) => {
-    axios.get('/comments/post/' + post.id)
-            .then(function (response) {
-                const commentsInResponse = response.data;
-                commentsInResponse.sort((a: any, b: any) => {
-                    return a.id - b.id;
-                });
-                setComments(commentsInResponse);
-            })
-            .catch(function (error) {
-            console.log(error);
-            });
-}
-
 const NewsFeedCard: React.FC<Props> = (props) => {
     const navigate = useNavigate();
     const {getSession} = useContext(UserAccountContext)
@@ -94,13 +86,13 @@ const NewsFeedCard: React.FC<Props> = (props) => {
     const [date, setDate] = React.useState('');
     const [connectedUser, setConnectedUser] = React.useState('');
     const [edit, setEdit] = React.useState(false);
-    const [text, setText] = React.useState(props.value.htmlContent);
+    const [text, setText] = React.useState(props.post.htmlContent);
     const [like, setLike] = React.useState(false);
-    const [likeCount, setLikeCount] = React.useState(0);
+    const [likeCount, setLikeCount] = React.useState(props.post._count.postLikes);
     const [likeData, setLikeData] = React.useState<any>({});
-    const [comments, setComments] = React.useState<Comment[] | []>([]);
+    const [comments, setComments] = React.useState(props.post.postComments);
     const [comment, setComment] = React.useState('');
-    const [post] = React.useState(props.value);
+    const [post] = React.useState(props.post);
 
     useEffect(() => {
         getSession().then((res: any) => {
@@ -124,14 +116,7 @@ const NewsFeedCard: React.FC<Props> = (props) => {
                 console.log(error);
             });
         }
-        axios.get('/likes/post/' + post.id + '/all')
-        .then(function (response) {
-            setLikeCount(response.data.length);
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
-        axios.get('/likes/post/' + post.id)
+        axios.get('/likes/' + post.id)
         .then(function (response) {
             if (response.data[0]) {
                 setLike(true);
@@ -165,11 +150,6 @@ const NewsFeedCard: React.FC<Props> = (props) => {
 
     const handleExpandClick = () => {
         setExpanded(!expanded);
-        if (comments.length === 0) {
-            getComments(post, setComments, comments)
-        } else {
-            setComments([])
-        }
     };
 
     const openEdit = () => {
@@ -177,10 +157,10 @@ const NewsFeedCard: React.FC<Props> = (props) => {
     }
 
     const deleteItem = async () => {
-        await axios.delete('/posts/' + post.id)
-        setTimeout(() => {
-            window.location.reload();
-        }, 2000);
+        axios.delete('/posts/' + post.id)
+        .then(function (response) {
+            props.setPosts([]);
+        })
     }
     
     function changeText(event: React.ChangeEvent<HTMLInputElement>) {
@@ -194,7 +174,6 @@ const NewsFeedCard: React.FC<Props> = (props) => {
     function confirmEdit () {
         const data = {
             htmlContent: text,
-            userId: 15
         };
         
         axios.patch('/posts/' + post.id, data)
@@ -217,13 +196,12 @@ const NewsFeedCard: React.FC<Props> = (props) => {
         }
         const data = {
             text: comment,
-            userId: 15,
             postId: post.id
         };
         axios.post('/comments', data)
           .then(function (response) {
-            getComments(post, setComments, comments)
             setComment('');
+            setComments([...comments, response.data])
           })
           .catch(function (error) {
             console.log(error);
@@ -233,7 +211,6 @@ const NewsFeedCard: React.FC<Props> = (props) => {
     function handleLike () {
         const data = {
             postId: post.id,
-            userId: 15
         };
 
         if (like) {
@@ -354,7 +331,7 @@ const NewsFeedCard: React.FC<Props> = (props) => {
                     {comments.map((value, index) =>    
                             <div key={index}>
                                 <Divider />
-                                <Comments value={value} connectedUser={connectedUser} getComments={getComments} post={post} setComments={setComments} comments={comments}></Comments>
+                                <Comments comment={value} connectedUser={connectedUser} getPosts={props.getPosts} setPosts={props.setPosts} setComments={setComments} comments={comments}></Comments>
                             </div>
                         )}
                 </CardContent>
