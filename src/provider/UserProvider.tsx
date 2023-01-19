@@ -8,6 +8,7 @@ export const UserAccountContext = createContext(null as any);
 
 export const UserAccountProvider: React.FC<{children?: React.ReactElement|React.ReactElement[]}> = (props) => {
 
+
     const getValidSession = () => {
         const user = userPool.getCurrentUser();
         return user?.getSession((err: any, session: any) => {

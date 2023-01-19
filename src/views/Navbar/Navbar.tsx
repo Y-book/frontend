@@ -154,6 +154,7 @@ const Search = styled('div')(({ theme }) => ({
           </IconButton>
           <p>Notifications</p>
         </MenuItem>
+        <NavLink to="/friendship" style={{ textDecoration: 'none', display: 'block', color: "inherit"}}>
         <MenuItem onClick={CloseAfterCLick}>
           <IconButton
             size="large"
@@ -165,6 +166,7 @@ const Search = styled('div')(({ theme }) => ({
           </IconButton>
           <p>Amis</p>
         </MenuItem>
+        </NavLink>
         <MenuItem onClick={CloseAfterCLick}>
           <IconButton
             size="large"
