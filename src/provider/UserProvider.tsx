@@ -8,7 +8,6 @@ export const UserAccountContext = createContext(null as any);
 
 export const UserAccountProvider: React.FC<{children?: React.ReactElement|React.ReactElement[]}> = (props) => {
 
-
     const getValidSession = () => {
         const user = userPool.getCurrentUser();
         return user?.getSession((err: any, session: any) => {
@@ -91,7 +90,8 @@ export const UserAccountProvider: React.FC<{children?: React.ReactElement|React.
                     resolve({data})
                 },
                 onFailure: function (err) {
-                    console.log("onFailure:",err)
+                    // console.log("onFailure:",err)
+                    alert("Nom d'utilisateur ou mot de passe incorrect");
                     reject(err)
 
 
