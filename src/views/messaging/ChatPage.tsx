@@ -6,7 +6,7 @@ const ChatPage = ({ }) => {
     return(
         <div className='chat__main'>
             <ChatBody />
-            {/* <ChatFooter socket={socket} /> */}
+            {<ChatFooter socket={socket} />}
         </div>
     )
 }

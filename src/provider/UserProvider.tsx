@@ -20,6 +20,7 @@ export const UserAccountProvider: React.FC<{children?: React.ReactElement|React.
                     //    console.log(session.getIdToken().getJwtToken());
                         const idToken = session.getIdToken().getJwtToken();
                         axios.defaults.headers.common['token'] = idToken;
+                        console.log("Connexion reussie ! idToken:",idToken)
                         resolve({session});
                     }
                 });
