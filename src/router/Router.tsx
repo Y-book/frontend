@@ -13,6 +13,7 @@ import Navbar from '../views/Navbar/Navbar';
 import { CircularProgress } from '@mui/material';
 import './Router.css';
 import Friendship from '../views/friendship/Friendship';
+import Profile from '../views/profile/Profile';
 
 function Router() {
   const {getValidSession} = useContext(UserAccountContext)
@@ -30,11 +31,11 @@ function Router() {
 
   return (
     <div className="Router">
-        <Navbar setConnectedUser={setConnectedUser} />
+        {connectedUser && <Navbar setConnectedUser={setConnectedUser} />}
         {loading && <div className="loading"><CircularProgress /></div>}
         {!loading && 
           <Routes>
-            {connectedUser && <Route path="/" element={<NewsFeed />} />}
+            {connectedUser && <Route path="/" element={<NewsFeed profile={false} type={''} />} />}
             {!connectedUser && <Route path="/" element={<Home />} />}
 
             {!connectedUser && <Route path="/login" element={<Login setConnectedUser={setConnectedUser} />} />}
@@ -45,6 +46,7 @@ function Router() {
             {connectedUser && <Route path="/listMessage" element={<ListMessage />} />}
             {/* // <Route path="message" element={<ChatPage socket={socket} />} /> */}
             {connectedUser && <Route path="/friendship" element={<Friendship />} />}
+            {connectedUser && <Route path="/profile" element={<Profile />} />}
           </Routes>}
     </div>
   );

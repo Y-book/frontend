@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled, alpha, useThemeProps } from '@mui/material/styles';
+import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -20,10 +20,8 @@ import PeopleIcon from '@mui/icons-material/People';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { MenuList } from '@mui/material';
 import { UserAccountContext } from '../../provider/UserProvider';
-
-type Props = {
-  setConnectedUser: React.Dispatch<React.SetStateAction<boolean>>
-}
+import { NavbarProps } from '../../interfaces/Types';
+import { blue } from '@mui/material/colors';
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -65,10 +63,9 @@ const Search = styled('div')(({ theme }) => ({
     },
   }));
 
-  const Navbar: React.FC<Props> = (props) => {
+  const Navbar: React.FC<NavbarProps> = (props) => {
     const {logOut} = React.useContext(UserAccountContext)
     const navigate = useNavigate();
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
       React.useState<null | HTMLElement>(null);
   
@@ -79,7 +76,6 @@ const Search = styled('div')(({ theme }) => ({
     };
   
     const CloseAfterCLick = () => {
-      setAnchorEl(null);
       handleMobileMenuClose();
     };
   
@@ -95,6 +91,11 @@ const Search = styled('div')(({ theme }) => ({
     const goHome = () => {
       handleMobileMenuClose();
       navigate('/');
+    }
+
+    const openProfile = () => {
+      handleMobileMenuClose();
+      navigate('/profile');
     }
 
     function logout () {
@@ -171,7 +172,7 @@ const Search = styled('div')(({ theme }) => ({
           <p>Amis</p>
         </MenuItem>
         </NavLink>
-        <MenuItem onClick={CloseAfterCLick}>
+        <MenuItem onClick={openProfile}>
           <IconButton
             size="large"
             aria-label="account of current user"
@@ -181,7 +182,7 @@ const Search = styled('div')(({ theme }) => ({
           >
             <AccountCircle />
           </IconButton>
-          <p>Profile</p>
+          <p>Profil</p>
         </MenuItem>
         <MenuItem onClick={CloseAfterCLick}>
           <IconButton
@@ -211,7 +212,7 @@ const Search = styled('div')(({ theme }) => ({
   
     return (
       <Box sx={{ flexGrow: 1, width: '100%' }}>
-        <AppBar position="static">
+        <AppBar position="static" style={{backgroundColor: blue[100], color: 'black'}}>
           <Toolbar>
           <NavLink to="/" style={{ textDecoration: 'none', display: 'block', color: "inherit"}}>         
             <Typography

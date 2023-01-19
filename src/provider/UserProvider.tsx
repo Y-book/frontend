@@ -2,7 +2,6 @@ import React,{createContext} from "react"
 import {AuthenticationDetails, CognitoUser, CognitoUserSession } from "amazon-cognito-identity-js"
 import { userPool } from '../index';
 import axios from 'axios';
-import Router from "../router/Router";
 
 export const UserAccountContext = createContext(null as any);
 
