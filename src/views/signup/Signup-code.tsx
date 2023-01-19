@@ -48,7 +48,7 @@ const SignupCode: React.FC = () => {
 
             cognitoUser.confirmRegistration(code, true, function (err, result) {
                 if (err) {
-                    alert(err.message || JSON.stringify(err));
+                    alert("Le code est incorrect");
                     return;
                 } else {
                     createUser(email, firstName, lastName);

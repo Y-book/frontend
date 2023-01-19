@@ -22,15 +22,15 @@ const Login: React.FC<{setConnectedUser: React.Dispatch<React.SetStateAction<boo
         setPassword(event.target.value);
     }
 
-    function connection() {
+    async function connection() {
         if (email !== '' && password !== '') {
-            authenticate(email, password)
-            .then(
-                props.setConnectedUser(true),
+            const login = await authenticate(email, password)
+            if (login) {
+                props.setConnectedUser(true);
                 setTimeout(() => {
                     navigate('/')
                 }, 1000)
-            )
+            }
         } else {
             alert("Merci de renseigner tous les champs");
         }
