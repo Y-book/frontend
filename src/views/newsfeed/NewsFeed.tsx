@@ -11,6 +11,7 @@ const getPosts = (setPosts: React.Dispatch<React.SetStateAction<[] | Post[]>>) =
     axios.get('/posts')
     .then(function (response) {
         const posts = response.data;
+        
         posts.sort((a: any, b: any) => {
             return b.id - a.id;
         });
@@ -23,23 +24,14 @@ const getPosts = (setPosts: React.Dispatch<React.SetStateAction<[] | Post[]>>) =
 };
 
 const NewsFeed: React.FC = () => {    
-    const navigate = useNavigate();
-    const {getSession} = useContext(UserAccountContext)
     const [posts, setPosts] = React.useState<Post[] | []>([])
     const [text, setText] = React.useState('')
     
     useEffect(() => {
-        getSession().then((res: any) => {
-            if (!res) {
-                navigate('/login')
-            }
-        });
-    // console.log(res.session.getIdToken().getJwtToken())
-
         if (posts.length === 0) {
             getPosts(setPosts)
         }
-    }, [getSession, navigate, posts.length]);
+    }, []);
 
     function changeText(event: React.ChangeEvent<HTMLInputElement>) {
         setText(event.target.value);

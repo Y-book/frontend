@@ -95,15 +95,15 @@ const NewsFeedCard: React.FC<Props> = (props) => {
     const [post] = React.useState(props.post);
 
     useEffect(() => {
-        getSession().then((res: any) => {
-            if (res) {
-                const token = res.session.idToken.jwtToken;
+        const session = getSession()
+            if (session) {                
+                const token = session.idToken.jwtToken;
                 const decoded: {email: string} = jwt_decode(token);
                 setConnectedUser(decoded?.email)
             } else {
                 navigate('/login');
             }
-        });
+        
         if (!user) {
             axios.get('/users/' + post.userId)
             .then(function (response) {

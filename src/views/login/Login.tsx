@@ -6,14 +6,13 @@ import { Button } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserAccountContext } from '../../provider/UserProvider';
 
-const Login: React.FC = () => {
+const Login: React.FC<{setConnectedUser: React.Dispatch<React.SetStateAction<boolean>>}> = (props) => {
     const navigate = useNavigate();
 
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
 
     const {authenticate} = useContext(UserAccountContext)
-    const {getSession} = useContext(UserAccountContext)
 
     function changeMail(event: React.ChangeEvent<HTMLInputElement>) {
         setEmail(event.target.value);
@@ -26,8 +25,12 @@ const Login: React.FC = () => {
     function connection() {
         if (email !== '' && password !== '') {
             authenticate(email, password)
-            .then(getSession())
-            .then(navigate('/newsfeed'))
+            .then(
+                props.setConnectedUser(true),
+                setTimeout(() => {
+                    navigate('/newsfeed')
+                }, 1000)
+            )
         } else {
             alert("Merci de renseigner tous les champs");
         }
