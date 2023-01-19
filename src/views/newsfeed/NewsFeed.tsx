@@ -11,8 +11,8 @@ const getPosts = (setPosts: React.Dispatch<React.SetStateAction<[] | Post[]>>) =
     axios.get('/posts')
     .then(function (response) {
         const posts = response.data;
-        posts.sort((a: any, b: any) => {
-            return b.id - a.id;
+        posts.sort((post1: any, post2: any) => {
+            return post2.id - post1.id;
         });
         setPosts(posts);
         return posts;
