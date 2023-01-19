@@ -4,16 +4,29 @@ import TextField from '@mui/material/TextField';
 import { Fab, InputAdornment } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { UserAccountContext } from '../../provider/UserProvider';
-import NewsFeedCard from './NewsFeedCard';
+import NewsFeedCard, { Post } from './NewsFeedCard';
 import axios from 'axios';
+
+const getPosts = (setPosts: React.Dispatch<React.SetStateAction<[] | Post[]>>) => {
+    axios.get('/posts')
+    .then(function (response) {
+        const posts = response.data;
+        posts.sort((a: any, b: any) => {
+            return b.id - a.id;
+        });
+        setPosts(posts);
+        return posts;
+    })
+    .catch(function (error) {
+    console.log(error);
+    });
+};
 
 const NewsFeed: React.FC = () => {    
     const navigate = useNavigate();
     const {getSession} = useContext(UserAccountContext)
-    const [posts, setPosts] = React.useState([])
-    // const [text, setText] = React.useState('')
-
-    let text = "";
+    const [posts, setPosts] = React.useState<Post[] | []>([])
+    const [text, setText] = React.useState('')
     
     useEffect(() => {
         getSession().then((res: any) => {
@@ -24,32 +37,25 @@ const NewsFeed: React.FC = () => {
     // console.log(res.session.getIdToken().getJwtToken())
 
         if (posts.length === 0) {
-            axios.get('/posts')
-            .then(function (response) {
-                const post = response.data;
-                post.sort((a: any, b: any) => {
-                    return b.id - a.id;
-                });
-                
-            setPosts(response.data);
-            })
-            .catch(function (error) {
-            console.log(error);
-            });
+            getPosts(setPosts)
         }
-    }, []);
+    }, [getSession, navigate, posts.length]);
 
     function changeText(event: React.ChangeEvent<HTMLInputElement>) {
-        text = event.target.value;
-        // setText(event.target.value);
+        setText(event.target.value);
     }
 
     function sendPost() {
+        if (text === '') {
+            return alert('Veuillez écrire un message avant de publier !')
+        }
         const data = {
             htmlContent: text,
         };
         axios.post('/posts', data)
           .then(function (response) {
+            setPosts([])
+            setText('');
           })
           .catch(function (error) {
             console.log(error);
@@ -59,8 +65,9 @@ const NewsFeed: React.FC = () => {
     return (
         <div className='main-container'>
             <div className='add-new-publication-container'>
-                <TextField fullWidth label="Publication Rapide" id="quickText"
+                <TextField fullWidth label="Publication Rapide" id="quickPost"
                 onChange={changeText}
+                value={text}
                 InputProps={{
                     endAdornment: (
                       <InputAdornment position="end" onClick={sendPost}>
@@ -71,24 +78,19 @@ const NewsFeed: React.FC = () => {
                     ),
                   }} />
             </div>
-            <div className='add-button'>
-                        <Fab color="default" aria-label="add" size='large'>
-                            <span className='add-button-text'>+</span>
-                        </Fab>
-                    </div>
+            {/* <div className='add-button'>
+                <Fab color="default" aria-label="add" size='large'>
+                    <span className='add-button-text'>+</span>
+                </Fab>
+            </div> */}
             <div className='publication-feed-container'>
                 <div className='feed-block'>
 
                 {posts.map((value, index) =>    
                     <div className='feed-card' key={index}>
-                        <NewsFeedCard value={value}></NewsFeedCard>
+                        <NewsFeedCard post={value} getPosts={getPosts} setPosts={setPosts} posts={posts}></NewsFeedCard>
                     </div>
                 )}
-                
-                    {/* 
-                    <div className='feed-card'>
-                        <NewsFeedCard></NewsFeedCard>
-                    </div> */}
                 </div>
             </div>
         </div>
