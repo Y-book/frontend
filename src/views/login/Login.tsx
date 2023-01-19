@@ -28,7 +28,7 @@ const Login: React.FC<{setConnectedUser: React.Dispatch<React.SetStateAction<boo
             .then(
                 props.setConnectedUser(true),
                 setTimeout(() => {
-                    navigate('/newsfeed')
+                    navigate('/')
                 }, 1000)
             )
         } else {

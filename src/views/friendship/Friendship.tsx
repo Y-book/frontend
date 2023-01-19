@@ -43,11 +43,13 @@ const Friendship: React.FC = () => {
         axios.get('/friendships/' + userId)
             .then(function (response) {
                 const friend = response.data;
-                friend.sort((a: any, b: any) => {
-                    return b.id - a.id;
-                });
-                console.log(response.data)
-                setFriendship(response.data);
+                if (friend.length > 0) {
+                    friend.sort((friend1: any, friend2: any) => {
+                        return friend2.id - friend1.id;
+                    });
+                    console.log(response.data)
+                    setFriendship(response.data);
+                }
             })
             .catch(function (error) {
                 console.log(error);

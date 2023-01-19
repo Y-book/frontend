@@ -87,6 +87,16 @@ const Search = styled('div')(({ theme }) => ({
       setMobileMoreAnchorEl(event.currentTarget);
     };
 
+    const goToFriendship = () => {
+      handleMobileMenuClose();
+      navigate('/friendship');
+    }
+
+    const goHome = () => {
+      handleMobileMenuClose();
+      navigate('/');
+    }
+
     function logout () {
       handleMobileMenuClose();
       const loggedOut = logOut()
@@ -97,12 +107,6 @@ const Search = styled('div')(({ theme }) => ({
               window.location.reload()
           }, 1000)
       }
-      
-      
-      props.setConnectedUser(true);
-      setTimeout(() => {
-        navigate('/');
-      }, 1000)
     };
   
     const mobileMenuId = 'primary-search-account-menu-mobile';
@@ -124,7 +128,7 @@ const Search = styled('div')(({ theme }) => ({
       >
         <MenuList>
         <NavLink to="/" style={{ textDecoration: 'none', display: 'block', color: "inherit"}}>
-        <MenuItem onClick={CloseAfterCLick}>
+        <MenuItem onClick={goHome}>
           <IconButton size="large" color="inherit">
             <Badge color="error">
               <HiHome />
@@ -155,7 +159,7 @@ const Search = styled('div')(({ theme }) => ({
           <p>Notifications</p>
         </MenuItem>
         <NavLink to="/friendship" style={{ textDecoration: 'none', display: 'block', color: "inherit"}}>
-        <MenuItem onClick={CloseAfterCLick}>
+        <MenuItem onClick={goToFriendship}>
           <IconButton
             size="large"
             color="inherit"

@@ -1,9 +1,7 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import "./NewsFeed.css";
 import TextField from '@mui/material/TextField';
 import { Fab, InputAdornment } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import { UserAccountContext } from '../../provider/UserProvider';
 import NewsFeedCard, { Post } from './NewsFeedCard';
 import axios from 'axios';
 

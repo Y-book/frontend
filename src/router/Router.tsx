@@ -12,6 +12,7 @@ import React, { useContext, useEffect } from 'react';
 import Navbar from '../views/Navbar/Navbar';
 import { CircularProgress } from '@mui/material';
 import './Router.css';
+import Friendship from '../views/friendship/Friendship';
 
 function Router() {
   const {getValidSession} = useContext(UserAccountContext)
@@ -43,7 +44,7 @@ function Router() {
 
             {connectedUser && <Route path="/listMessage" element={<ListMessage />} />}
             {/* // <Route path="message" element={<ChatPage socket={socket} />} /> */}
-            {connectedUser && <Route path="/newsfeed" element={<NewsFeed />} />}
+            {connectedUser && <Route path="/friendship" element={<Friendship />} />}
           </Routes>}
     </div>
   );
