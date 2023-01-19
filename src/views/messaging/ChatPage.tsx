@@ -1,5 +1,5 @@
 import React from 'react';
-import ChatBody from './ChatBody';
+/* import ChatBody from './ChatBody';
 import ChatFooter from './ChatFooter';
 
 const ChatPage = ({ }) => {
@@ -11,4 +11,4 @@ const ChatPage = ({ }) => {
     )
 }
 
-export default ChatPage;
+export default ChatPage; */
