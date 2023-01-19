@@ -159,7 +159,7 @@ const NewsFeedCard: React.FC<Props> = (props) => {
     const deleteItem = async () => {
         axios.delete('/posts/' + post.id)
         .then(function (response) {
-            props.setPosts([]);
+            props.getPosts(props.setPosts);
         })
     }
     

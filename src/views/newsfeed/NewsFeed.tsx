@@ -6,6 +6,7 @@ import NewsFeedCard, { Post } from './NewsFeedCard';
 import axios from 'axios';
 
 const getPosts = (setPosts: React.Dispatch<React.SetStateAction<[] | Post[]>>) => {
+    setPosts([]);
     axios.get('/posts')
     .then(function (response) {
         const posts = response.data;
@@ -43,7 +44,7 @@ const NewsFeed: React.FC = () => {
         };
         axios.post('/posts', data)
           .then(function (response) {
-            setPosts([])
+            getPosts(setPosts)
             setText('');
           })
           .catch(function (error) {
