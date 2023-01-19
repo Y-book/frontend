@@ -122,7 +122,7 @@ const NewsFeedCard: React.FC<Props> = (props) => {
     function confirmEdit () {
         const data = {
             htmlContent: text,
-            userId: 15
+            userId: 29
         };
         
         axios.patch('/posts/' + post.id, data)

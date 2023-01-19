@@ -47,10 +47,11 @@ const NewsFeed: React.FC = () => {
     function sendPost() {
         const data = {
             htmlContent: text,
-            userId: 15
+            userId: 29
         };
         axios.post('/posts', data)
           .then(function (response) {
+            window.location.reload();
           })
           .catch(function (error) {
             console.log(error);
