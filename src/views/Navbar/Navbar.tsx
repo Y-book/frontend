@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled, alpha } from '@mui/material/styles';
+import { styled, alpha, useThemeProps } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -17,9 +17,13 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import SettingsIcon from '@mui/icons-material/Settings';
 import PeopleIcon from '@mui/icons-material/People';
-import Link, { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { MenuList } from '@mui/material';
+import { UserAccountContext } from '../../provider/UserProvider';
 
+type Props = {
+  setConnectedUser: React.Dispatch<React.SetStateAction<boolean>>
+}
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -61,7 +65,9 @@ const Search = styled('div')(({ theme }) => ({
     },
   }));
 
-  export default function Navbar() {
+  const Navbar: React.FC<Props> = (props) => {
+    const {logOut} = React.useContext(UserAccountContext)
+    const navigate = useNavigate();
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
       React.useState<null | HTMLElement>(null);
@@ -79,6 +85,28 @@ const Search = styled('div')(({ theme }) => ({
   
     const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
       setMobileMoreAnchorEl(event.currentTarget);
+    };
+
+    const goToFriendship = () => {
+      handleMobileMenuClose();
+      navigate('/friendship');
+    }
+
+    const goHome = () => {
+      handleMobileMenuClose();
+      navigate('/');
+    }
+
+    function logout () {
+      handleMobileMenuClose();
+      const loggedOut = logOut()
+      if (loggedOut) {
+          props.setConnectedUser(true);
+          setTimeout(() => {
+              navigate('/login')
+              window.location.reload()
+          }, 1000)
+      }
     };
   
     const mobileMenuId = 'primary-search-account-menu-mobile';
@@ -100,7 +128,7 @@ const Search = styled('div')(({ theme }) => ({
       >
         <MenuList>
         <NavLink to="/" style={{ textDecoration: 'none', display: 'block', color: "inherit"}}>
-        <MenuItem onClick={CloseAfterCLick}>
+        <MenuItem onClick={goHome}>
           <IconButton size="large" color="inherit">
             <Badge color="error">
               <HiHome />
@@ -131,7 +159,7 @@ const Search = styled('div')(({ theme }) => ({
           <p>Notifications</p>
         </MenuItem>
         <NavLink to="/friendship" style={{ textDecoration: 'none', display: 'block', color: "inherit"}}>
-        <MenuItem onClick={CloseAfterCLick}>
+        <MenuItem onClick={goToFriendship}>
           <IconButton
             size="large"
             color="inherit"
@@ -165,6 +193,17 @@ const Search = styled('div')(({ theme }) => ({
             </Badge>
           </IconButton>
           <p>Settings</p>
+        </MenuItem>
+        <MenuItem onClick={logout}>
+          <IconButton
+            size="large"
+            color="inherit"
+          >
+            <Badge color="error">
+              <SettingsIcon />
+            </Badge>
+          </IconButton>
+          <p>Déconnexion</p>
         </MenuItem>
       </MenuList>
       </Menu>
@@ -253,3 +292,5 @@ const Search = styled('div')(({ theme }) => ({
       </Box>
     );
   }
+
+  export default Navbar;

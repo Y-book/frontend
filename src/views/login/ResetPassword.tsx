@@ -60,7 +60,7 @@ const ResetPassword: React.FC = () => {
 
             cognitoUser.confirmPassword(code, password, {
                 onFailure: function(err) {
-                    alert(err);
+                    alert("L'adresse mail ou le code est incorrect");
                 },
                 onSuccess: function() {
                     navigate('/login');
