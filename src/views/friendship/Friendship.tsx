@@ -33,8 +33,9 @@ const Friendship: React.FC = () => {
     const [user, setUser] = React.useState<User>();
 
     React.useEffect(() => {
-        axios.get('/friendships/')
+        axios.get('/friendships')
             .then(function (response) {
+                console.log(response);
                 setUser(response.data);
             })
             .catch(function (error) {
