@@ -6,9 +6,8 @@ import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
 import Collapse from '@mui/material/Collapse';
 import Avatar from '@mui/material/Avatar';
-import IconButton, { IconButtonProps } from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import { grey } from '@mui/material/colors';
+import IconButton from '@mui/material/IconButton';
+import { blue } from '@mui/material/colors';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -23,48 +22,8 @@ import { Divider, Fab, InputAdornment, TextField } from '@mui/material';
 import Comments from '../comments/Comments';
 import { useNavigate } from 'react-router-dom';
 import "./NewsFeed.css";
-
-type Props = {
-    post: Post,
-    getPosts: (setPosts: React.Dispatch<React.SetStateAction<[] | Post[]>>) => void,
-    setPosts: React.Dispatch<React.SetStateAction<[] | Post[]>>,
-    posts: Post[],
-}
-
-export type Post = {
-    id: number,
-    createdAt: string,
-    updatedAt: string,
-    userId: number,
-    htmlContent: string,
-    _count: {
-        postComments: number,
-        postLikes: number,
-    },
-    _liked: boolean,
-    postComments: Comment[],
-}
-
-export type User = {
-    id: number;
-    firstname: string;
-    lastname: string;
-    email: string;
-}
-
-export type Comment = {
-    id: number,
-    createdAt: string,
-    updatedAt: string,
-    userId: number,
-    postId: number,
-    text: string,
-}
-
-
-interface ExpandMoreProps extends IconButtonProps {
-    expand: boolean;
-  }
+import parse from 'html-react-parser';
+import { ExpandMoreProps, PostsProps, User } from '../../interfaces/Types';
   
   const ExpandMore = styled((props: ExpandMoreProps) => {
     const { expand, ...other } = props;
@@ -77,7 +36,7 @@ interface ExpandMoreProps extends IconButtonProps {
     }),
   }));
 
-const NewsFeedCard: React.FC<Props> = (props) => {
+const NewsFeedCard: React.FC<PostsProps> = (props) => {
     const navigate = useNavigate();
     const {getSession} = useContext(UserAccountContext)
     const [expanded, setExpanded] = React.useState(false);
@@ -104,7 +63,7 @@ const NewsFeedCard: React.FC<Props> = (props) => {
                 navigate('/login');
             }
         
-        if (!user) {
+        if (!user) {            
             axios.get('/users/' + post.userId)
             .then(function (response) {
                 setUser(response.data);
@@ -159,7 +118,7 @@ const NewsFeedCard: React.FC<Props> = (props) => {
     const deleteItem = async () => {
         axios.delete('/posts/' + post.id)
         .then(function (response) {
-            props.getPosts(props.setPosts);
+            props.getPosts(props.setPosts, props.profile, props.type);
         })
     }
     
@@ -240,7 +199,7 @@ const NewsFeedCard: React.FC<Props> = (props) => {
         <Card sx={{ maxWidth: 345 }}>
             <CardHeader
                 avatar={
-                <Avatar sx={{ bgcolor: grey[500] }} aria-label="recipe">
+                <Avatar sx={{ bgcolor: blue[100], color: 'black' }} aria-label="recipe">
                     {letter}
                 </Avatar>
                 }
@@ -282,9 +241,9 @@ const NewsFeedCard: React.FC<Props> = (props) => {
                 <TextField fullWidth value={text} id="quickEditPost"
                 onChange={changeText} />
             </div> : 
-            <Typography variant="body2" color="text.secondary">
-                {post.htmlContent}
-            </Typography>
+            <div color="text.secondary">
+                {parse(post.htmlContent)}
+            </div>
             }
                 
             </CardContent>
@@ -331,7 +290,7 @@ const NewsFeedCard: React.FC<Props> = (props) => {
                     {comments.map((value, index) =>    
                             <div key={index}>
                                 <Divider />
-                                <Comments comment={value} connectedUser={connectedUser} getPosts={props.getPosts} setPosts={props.setPosts} setComments={setComments} comments={comments}></Comments>
+                                <Comments comment={value} connectedUser={connectedUser} getPosts={props.getPosts} setPosts={props.setPosts} profile={props.profile} type={props.type} setComments={setComments} comments={comments}></Comments>
                             </div>
                         )}
                 </CardContent>

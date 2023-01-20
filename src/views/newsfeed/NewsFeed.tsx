@@ -1,35 +1,93 @@
 import React, { useEffect } from 'react';
 import "./NewsFeed.css";
 import TextField from '@mui/material/TextField';
-import { Fab, InputAdornment } from '@mui/material';
-import NewsFeedCard, { Post } from './NewsFeedCard';
+import { CircularProgress, Fab, InputAdornment } from '@mui/material';
+import NewsFeedCard from './NewsFeedCard';
 import axios from 'axios';
+import { Post } from '../../interfaces/Types';
+import { blue } from '@mui/material/colors';
 
-const getPosts = (setPosts: React.Dispatch<React.SetStateAction<[] | Post[]>>) => {
-    setPosts([]);
-    axios.get('/posts')
-    .then(function (response) {
-        const posts = response.data;
-        posts.sort((post1: any, post2: any) => {
-            return post2.id - post1.id;
+const getPosts = (setPosts: React.Dispatch<React.SetStateAction<[] | Post[]>>, profile: boolean, type: string) => {
+    if (profile && type === 'posts') {
+        setPosts([]);
+        axios.get('/posts')
+        .then(function (response) {
+            const posts = response.data;        
+            if (posts.length > 1) {
+                posts.sort((post1: any, post2: any) => {
+                    return post2.id - post1.id;
+                });
+            }
+            setPosts(posts);
+            return posts;
+        })
+        .catch(function (error) {
+        console.log(error);
         });
-        setPosts(posts);
-        return posts;
-    })
-    .catch(function (error) {
-    console.log(error);
-    });
+    } else if (profile && type === 'comments') {
+        setPosts([]);
+        axios.get('/posts/comments')
+        .then(function (response) {
+            const posts = response.data;        
+            if (posts.length > 1) {
+                posts.sort((post1: any, post2: any) => {
+                    return post2.id - post1.id;
+                });
+            }
+            setPosts(posts);
+            return posts;
+        })
+        .catch(function (error) {
+        console.log(error);
+        });
+    } else if (profile && type === 'likes') {
+        setPosts([]);
+        axios.get('/posts/likes')
+        .then(function (response) {
+            const posts = response.data;        
+            if (posts.length > 1) {
+                posts.sort((post1: any, post2: any) => {
+                    return post2.id - post1.id;
+                });
+            }
+            setPosts(posts);
+            return posts;
+        })
+        .catch(function (error) {
+        console.log(error);
+        });
+    } else {
+        setPosts([]);
+        axios.get('/posts/all')
+        .then(function (response) {
+            const posts = response.data;        
+            if (posts.length > 1) {
+                posts.sort((post1: any, post2: any) => {
+                    return post2.id - post1.id;
+                });
+            }
+            setPosts(posts);
+            return posts;
+        })
+        .catch(function (error) {
+        console.log(error);
+        });
+    }
 };
 
-const NewsFeed: React.FC = () => {    
+const NewsFeed: React.FC<{profile: boolean, type: string}> = (props) => {    
     const [posts, setPosts] = React.useState<Post[] | []>([])
     const [text, setText] = React.useState('')
+    const [loading, setLoading] = React.useState(true)
+    const profile = props.profile;
+    const type = props.type;
     
     useEffect(() => {
         if (posts.length === 0) {
-            getPosts(setPosts)
+            getPosts(setPosts, profile, type)
         }
-    }, []);
+        setLoading(false)
+    }, [posts.length, profile, type, setPosts, setLoading]);
 
     function changeText(event: React.ChangeEvent<HTMLInputElement>) {
         setText(event.target.value);
@@ -44,7 +102,7 @@ const NewsFeed: React.FC = () => {
         };
         axios.post('/posts', data)
           .then(function (response) {
-            getPosts(setPosts)
+            getPosts(setPosts, profile, type)
             setText('');
           })
           .catch(function (error) {
@@ -54,7 +112,8 @@ const NewsFeed: React.FC = () => {
 
     return (
         <div className='main-container'>
-            <div className='add-new-publication-container'>
+            {loading && <div className="loading"><CircularProgress /></div>}
+            {!loading && !profile && <div className='add-new-publication-container'>
                 <TextField fullWidth label="Publication Rapide" id="quickPost"
                 onChange={changeText}
                 value={text}
@@ -67,22 +126,35 @@ const NewsFeed: React.FC = () => {
                       </InputAdornment>
                     ),
                   }} />
-            </div>
+            </div>}
             {/* <div className='add-button'>
                 <Fab color="default" aria-label="add" size='large'>
                     <span className='add-button-text'>+</span>
                 </Fab>
             </div> */}
+            {!loading && !posts && <div className='no-publication-container'>Il n'y a aucun post</div>}
+            {!loading && !profile &&
             <div className='publication-feed-container'>
-                <div className='feed-block'>
+                <div className='feed-block' style={{backgroundColor: blue[100]}}>
 
                 {posts.map((value, index) =>    
                     <div className='feed-card' key={index}>
-                        <NewsFeedCard post={value} getPosts={getPosts} setPosts={setPosts} posts={posts}></NewsFeedCard>
+                        <NewsFeedCard post={value} getPosts={getPosts} setPosts={setPosts} profile={profile} type={type} posts={posts}></NewsFeedCard>
                     </div>
                 )}
                 </div>
-            </div>
+            </div>}
+            {!loading && profile &&
+            <div className='publication-feed-container-for-profile'>
+                <div className='feed-block' style={{backgroundColor: blue[100]}}>
+
+                {posts.map((value, index) =>    
+                    <div className='feed-card' key={index}>
+                        <NewsFeedCard post={value} getPosts={getPosts} setPosts={setPosts} profile={profile} type={type} posts={posts}></NewsFeedCard>
+                    </div>
+                )}
+                </div>
+            </div>}
         </div>
     );
 };

@@ -1,7 +1,6 @@
 import "./Comments.css";
 import React, { useEffect } from 'react';
 import axios from 'axios';
-import { Comment, Post, User } from '../newsfeed/NewsFeedCard';
 import { Avatar, IconButton, ListItem, ListItemAvatar, ListItemText, Typography } from "@mui/material";
 import { grey } from '@mui/material/colors';
 import { useNavigate } from "react-router-dom";
@@ -9,18 +8,9 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
+import { Comment, CommentsProps, User } from "../../interfaces/Types";
 
-
-type Props = {
-    comment: Comment,
-    connectedUser: string,
-    getPosts: (setPosts: React.Dispatch<React.SetStateAction<[] | Post[]>>) => void,
-    setPosts: React.Dispatch<React.SetStateAction<[] | Post[]>>,
-    setComments: React.Dispatch<React.SetStateAction<[] | Comment[]>>,
-    comments: Comment[],
-}
-
-const Comments: React.FC<Props> = (props) => { 
+const Comments: React.FC<CommentsProps> = (props) => { 
     const navigate = useNavigate();
     const [letter, setLetter] = React.useState('');
     const [edit, setEdit] = React.useState(false);
@@ -58,7 +48,7 @@ const Comments: React.FC<Props> = (props) => {
     const deleteItem = () => {
         axios.delete('/comments/' + comment.id)
         .then(function (response) {
-            props.getPosts(props.setPosts);
+            props.getPosts(props.setPosts, props.profile, props.type);
             props.setComments(props.comments.filter((item) => item.id !== comment.id));
         })
     }
