@@ -84,7 +84,7 @@ const Profile: React.FC = () => {
                 <div className="header-image"></div>
                 <div className="header-profile">
                     <div className="avatar">
-                        <Avatar sx={{ bgcolor: blue[100], width: 70, height: 70 }} aria-label="recipe">
+                        <Avatar sx={{ bgcolor: blue[100], width: 70, height: 70, color: 'black' }} aria-label="recipe">
                             {letter}
                         </Avatar>
                     </div>

@@ -22,6 +22,7 @@ import { MenuList } from '@mui/material';
 import { UserAccountContext } from '../../provider/UserProvider';
 import { NavbarProps } from '../../interfaces/Types';
 import { blue } from '@mui/material/colors';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -184,24 +185,13 @@ const Search = styled('div')(({ theme }) => ({
           </IconButton>
           <p>Profil</p>
         </MenuItem>
-        <MenuItem onClick={CloseAfterCLick}>
-          <IconButton
-            size="large"
-            color="inherit"
-          >
-            <Badge color="error">
-              <SettingsIcon />
-            </Badge>
-          </IconButton>
-          <p>Settings</p>
-        </MenuItem>
         <MenuItem onClick={logout}>
           <IconButton
             size="large"
             color="inherit"
           >
             <Badge color="error">
-              <SettingsIcon />
+              <LogoutIcon />
             </Badge>
           </IconButton>
           <p>Déconnexion</p>

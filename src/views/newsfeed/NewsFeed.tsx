@@ -86,7 +86,9 @@ const NewsFeed: React.FC<{profile: boolean, type: string}> = (props) => {
         if (posts.length === 0) {
             getPosts(setPosts, profile, type)
         }
-        setLoading(false)
+        if (posts.length > 0) {
+            setLoading(false)
+        }
     }, [posts.length, profile, type, setPosts, setLoading]);
 
     function changeText(event: React.ChangeEvent<HTMLInputElement>) {
