@@ -9,7 +9,7 @@ import NewsFeed from "../newsfeed/NewsFeed";
 import { useNavigate } from "react-router-dom";
 import { TabPanelProps, User } from "../../interfaces/Types";
 
-function TabPanel(props: TabPanelProps) {
+export function TabPanel(props: TabPanelProps) {
     const { children, value, index, ...other } = props;
 
     return (
@@ -29,7 +29,7 @@ function TabPanel(props: TabPanelProps) {
     );
 }
 
-function a11yProps(index: number) {
+export function a11yProps(index: number) {
     return {
       id: `simple-tab-${index}`,
       'aria-controls': `simple-tabpanel-${index}`,
