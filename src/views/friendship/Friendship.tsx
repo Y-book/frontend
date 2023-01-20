@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { } from '@mui/material';
 
 import Box from '@mui/material/Box';
@@ -7,47 +7,35 @@ import CardContent from '@mui/material/CardContent';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import axios from 'axios';
+import { UserAccountContext } from '../../provider/UserProvider';
+import { useNavigate } from 'react-router-dom';
+import jwt_decode from "jwt-decode";
 
 interface LinkTabProps {
     label: string;
     link: string;
 }
 
-function LinkTab(props: LinkTabProps) {
-    return (
-        <Tab
-            component="a"
-            onClick={(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-                event.preventDefault();
-            }}
-            {...props}
-        />
-    );
+type User = {
+    id: number;
+    firstname: string;
+    lastname: string;
 }
 
 const Friendship: React.FC = () => {
-
     const [value, setValue] = React.useState(0);
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
     };
-
-    const userId=29;
-
-    const [friendship, setFriendship] = React.useState([]);
-    // let friend = "";
-
-    // const friendship = props.value;
+    const [connectedUser, setConnectedUser] = React.useState('');
+    const {getSession} = useContext(UserAccountContext)
+    const navigate = useNavigate();
+    const [user, setUser] = React.useState<User>();
 
     React.useEffect(() => {
-        axios.get('/friendships/' + userId)
+        axios.get('/friendships/')
             .then(function (response) {
-                const friend = response.data;
-                friend.sort((a: any, b: any) => {
-                    return b.id - a.id;
-                });
-                console.log(response.data)
-                setFriendship(response.data);
+                setUser(response.data);
             })
             .catch(function (error) {
                 console.log(error);
@@ -64,9 +52,21 @@ const Friendship: React.FC = () => {
                     value={value}
                     onChange={handleChange}
                     >
-                        <LinkTab link='/friendship' label="Liste d'ami(s)" />
-                        <LinkTab link='/' label="Demande(s) d'ami" />
+                        {/* <LinkTab link='/friendship' label="Liste d'ami(s)" />
+                        <LinkTab link='/request' label="Demande(s) d'ami" /> */}
                     </Tabs>
+                    <CardContent>
+                        <div>
+                            <h1>Amis</h1>
+                            <ul>
+                                {/* {user?.map((user: User) => (
+                                    <li key={user.firstname}>
+                                        {user.firstname}
+                                    </li>
+                                ))} */}
+                            </ul>
+                        </div>
+                    </CardContent>
                 </Box>
                 </CardContent>
             </Card>
@@ -75,3 +75,5 @@ const Friendship: React.FC = () => {
 };
 
 export default Friendship;
+
+
