@@ -43,6 +43,15 @@ export type Comment = {
     text: string,
 }
 
+export type Friend = {
+    id: number,
+    fromId: number,
+    toId: number,
+    status: string,
+    from: User[],
+    to: User[],
+}
+
 
 export interface ExpandMoreProps extends IconButtonProps {
     expand: boolean;
