@@ -3,7 +3,6 @@ import React, { useContext, useEffect } from "react";
 import { User } from "../../interfaces/Types";
 import { UserAccountContext } from "../../provider/UserProvider";
 import jwt_decode from "jwt-decode";
-import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
 import axios from 'axios';
 import { blue } from '@mui/material/colors';
@@ -11,11 +10,10 @@ import { blue } from '@mui/material/colors';
 const FriendsListItem: React.FC<{value: any}> = (props) => {
     const {getSession} = useContext(UserAccountContext)
     const [friend, setFriend] = React.useState<User>();
-    const [received, setReceived] = React.useState<boolean>(false);
     const [connectedUser, setConnectedUser] = React.useState('');
     const [letter, setLetter] = React.useState<string | undefined>('');
 
-    const friendShip = props.value;
+    const friendShip = props.value;    
     
     useEffect(() => {
         const session = getSession()
@@ -26,13 +24,12 @@ const FriendsListItem: React.FC<{value: any}> = (props) => {
         }
         if (friendShip.from.email !== connectedUser) {
             setFriend(friendShip.from);
-            setReceived(true);
             setLetter(friendShip.from.firstname[0].toUpperCase());
         } else {
             setFriend(friendShip.to);
-            setReceived(false);
             setLetter(friendShip.to.firstname[0].toUpperCase());
         }
+        setLetter(friendShip.to.firstname[0].toUpperCase());
     }, [friendShip, connectedUser, getSession])
 
     function remove () {
