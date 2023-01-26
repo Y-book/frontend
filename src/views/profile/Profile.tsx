@@ -45,7 +45,7 @@ const Profile: React.FC = () => {
     // const theme = useTheme();
     const [value, setValue] = React.useState(0);
     const [loading, setLoading] = React.useState(true);
-
+    const [friendsCount, setFriendsCount] = React.useState(0);
     
     useEffect(() => {
         const session = getSession()
@@ -65,6 +65,14 @@ const Profile: React.FC = () => {
                 console.log(error);
             });
         }
+        axios.get('/friendships')
+            .then(function (response) {
+                const friends = response.data.filter((friend: any) => friend.status === 'ACCEPTED');
+                setFriendsCount(friends.length);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }, [getSession, connectedUser, setConnectedUser, user])
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -90,7 +98,9 @@ const Profile: React.FC = () => {
                     </div>
                     <div>
                         <p>{user?.firstname} {user?.lastname}</p>
-                        <p className="link" onClick={goToFriends}>0 Amis</p>
+                        <p className="link" onClick={goToFriends}>{friendsCount} {
+                            friendsCount > 1 ? 'Amis' : 'Ami'}
+                        </p>
                     </div>
                     {/* <div className="edit-icon">
                         <IconButton aria-label="edit" sx={{ color: grey[50] }}>
