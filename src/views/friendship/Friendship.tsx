@@ -15,6 +15,21 @@ import SearchPeopleItem from './SearchPeopleItem';
 import jwt_decode from "jwt-decode";
 import { UserAccountContext } from '../../provider/UserProvider';
 
+const getFriends = (setTotalFriendsList: React.Dispatch<React.SetStateAction<[] | Friend[]>> , setFriendDemands: React.Dispatch<React.SetStateAction<[] | Friend[]>>, setFriendList: React.Dispatch<React.SetStateAction<[] | Friend[]>>, setLoading: React.Dispatch<React.SetStateAction<boolean>>) => {
+    axios.get('/friendships')
+    .then(function (response) {
+        setTotalFriendsList(response.data);
+        const requests = response.data.filter((friendship: Friend) => friendship.status === 'PENDING');
+        const friends = response.data.filter((friendship: Friend) => friendship.status === 'ACCEPTED');
+        setFriendDemands(requests);
+        setFriendList(friends);
+        setLoading(false);
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+}
+
 const Friendship: React.FC = () => {
     const {getSession} = useContext(UserAccountContext)
     const [value, setValue] = React.useState(0);
@@ -22,8 +37,8 @@ const Friendship: React.FC = () => {
         setValue(newValue);
     };
     const [totalFriendsList, setTotalFriendsList] = React.useState<Friend[]>([]);
-    const [friendDemands, setFriendDemands] = React.useState<User[]>([]);
-    const [friendList, setFriendList] = React.useState<User[]>([]);
+    const [friendDemands, setFriendDemands] = React.useState<Friend[]>([]);
+    const [friendList, setFriendList] = React.useState<Friend[]>([]);
     const [loading, setLoading] = React.useState(true);
     const [text, setText] = React.useState('');
     const [searchResponse, setSearchResponse] = React.useState<User[]>([]);
@@ -37,18 +52,7 @@ const Friendship: React.FC = () => {
             const decoded: {email: string} = jwt_decode(token);
             setConnectedUser(decoded?.email)
         }
-        axios.get('/friendships')
-            .then(function (response) {
-                setTotalFriendsList(response.data);
-                const requests = response.data.filter((friendship: any) => friendship.status === 'PENDING');
-                const friends = response.data.filter((friendship: any) => friendship.status === 'ACCEPTED');
-                setFriendDemands(requests);
-                setFriendList(friends);
-                setLoading(false);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+        getFriends(setTotalFriendsList, setFriendDemands, setFriendList, setLoading);
     }, [getSession]);
 
     // function changeText(event: React.ChangeEvent<HTMLInputElement>) {
@@ -69,8 +73,8 @@ const Friendship: React.FC = () => {
             axios.post('/users/search-users', data)
               .then(function (response) {
                 const users = response.data;
-                const totalFriendsListIdFrom = totalFriendsList.map((friendship: any) => friendship.fromId).filter((friend: any) => friend.status !== 'IGNORED');
-                const totalFriendsListIdTo = totalFriendsList.map((friendship: any) => friendship.toId).filter((friend: any) => friend.status !== 'IGNORED');
+                const totalFriendsListIdFrom = totalFriendsList.filter((friend: Friend) => friend.status !== 'IGNORED').map((friendship: Friend) => friendship.fromId);
+                const totalFriendsListIdTo = totalFriendsList.filter((friend: Friend) => friend.status !== 'IGNORED').map((friendship: Friend) => friendship.toId);
                 const totalFriendsListId = totalFriendsListIdFrom.concat(totalFriendsListIdTo);
                 for (let i = 0; i < users.length; i++) {
                     if (users[i].email === connectedUser) {
@@ -105,7 +109,7 @@ const Friendship: React.FC = () => {
                     <List dense sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
                         {searchResponse.map((value, index) =>    
                             <div className='feed-card' key={index}>
-                                <SearchPeopleItem value={value} friendDemands={friendDemands} friendList={friendList} ></SearchPeopleItem>
+                                <SearchPeopleItem value={value} getFriends={getFriends} setTotalFriendsList={setTotalFriendsList} setFriendDemands={setFriendDemands} setFriendList={setFriendList} setLoading={setLoading} setSearchResponse={setSearchResponse} searchResponse={searchResponse} ></SearchPeopleItem>
                             </div>
                         )}
                     </List>
@@ -124,7 +128,7 @@ const Friendship: React.FC = () => {
                             <List dense sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
                                 {friendList.map((value, index) =>    
                                     <div className='feed-card' key={index}>
-                                        <FriendsListItem value={value} ></FriendsListItem>
+                                        <FriendsListItem value={value} getFriends={getFriends} setTotalFriendsList={setTotalFriendsList} setFriendDemands={setFriendDemands} setFriendList={setFriendList} setLoading={setLoading} ></FriendsListItem>
                                     </div>
                                 )}
                             </List>
@@ -133,7 +137,7 @@ const Friendship: React.FC = () => {
                             <List dense sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
                                 {friendDemands.map((value, index) =>    
                                     <div className='feed-card' key={index}>
-                                        <FriendDemandItem value={value} ></FriendDemandItem>
+                                        <FriendDemandItem value={value} getFriends={getFriends} setTotalFriendsList={setTotalFriendsList} setFriendDemands={setFriendDemands} setFriendList={setFriendList} setLoading={setLoading} ></FriendDemandItem>
                                     </div>
                                 )}
                             </List>

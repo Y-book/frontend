@@ -73,7 +73,7 @@ const Comments: React.FC<CommentsProps> = (props) => {
         setEdit(false);
     }
 
-    function handleKeyPress (event: any) {
+    function handleKeyPress (event: React.KeyboardEvent<HTMLDivElement>) {
         if(event.key === 'Enter'){
             confirmEdit();
         }

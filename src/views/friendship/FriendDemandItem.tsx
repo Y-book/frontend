@@ -1,6 +1,6 @@
 import { Avatar, IconButton, ListItem, ListItemAvatar, ListItemButton, ListItemText } from "@mui/material";
 import React, { useContext, useEffect } from "react";
-import { User } from "../../interfaces/Types";
+import { FriendsListAndDemandItemProps, User } from "../../interfaces/Types";
 import { UserAccountContext } from "../../provider/UserProvider";
 import jwt_decode from "jwt-decode";
 import DoneIcon from '@mui/icons-material/Done';
@@ -8,7 +8,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { blue } from '@mui/material/colors';
 import axios from 'axios';
 
-const FriendDemandItem: React.FC<{value: any}> = (props) => {
+const FriendDemandItem: React.FC<FriendsListAndDemandItemProps> = (props) => {
     const {getSession} = useContext(UserAccountContext)
     const [friend, setFriend] = React.useState<User>();
     const [received, setReceived] = React.useState<boolean>(false);
@@ -16,6 +16,8 @@ const FriendDemandItem: React.FC<{value: any}> = (props) => {
     const [letter, setLetter] = React.useState<string | undefined>('');
 
     const friendShipRequest = props.value;
+    console.log(friendShipRequest);
+    
     
     useEffect(() => {
         const session = getSession()
@@ -35,24 +37,22 @@ const FriendDemandItem: React.FC<{value: any}> = (props) => {
         }
     }, [friendShipRequest, connectedUser, getSession])
 
-    function accept(accepted : any) {
+    function accept() {
         if (!friend) return alert('Une erreur est survenue !')
         axios.patch('/friendships', {fromId: friend.id, status: 'ACCEPTED'})
             .then(function (response) {
-                accepted = response.data;
-                setFriend(friendShipRequest.accepted)
+                props.getFriends(props.setTotalFriendsList, props.setFriendDemands, props.setFriendList, props.setLoading);
             })
             .catch(function (error) {
                 console.log(error);
             });
     }
 
-    function refuse(ignored: any) {
+    function refuse() {
         if (!friend) return alert('Une erreur est survenue !')
         axios.patch('/friendships', {fromId: friend.id, status: 'IGNORED'})
             .then(function (response) {
-                ignored = response.data;
-                setFriend(friendShipRequest.ignored)
+                props.getFriends(props.setTotalFriendsList, props.setFriendDemands, props.setFriendList, props.setLoading);
             })
             .catch(function (error) {
                 console.log(error);
@@ -62,8 +62,11 @@ const FriendDemandItem: React.FC<{value: any}> = (props) => {
     function remove () {
         if (!friendShipRequest) return alert('Une erreur est survenue !')
         axios.delete('/friendships/' + friendShipRequest.id)
-            .catch(function (error) {
-                console.log(error);
+        .then(function (response) {
+            props.getFriends(props.setTotalFriendsList, props.setFriendDemands, props.setFriendList, props.setLoading);
+        })
+        .catch(function (error) {
+            console.log(error);
         });
     }
 

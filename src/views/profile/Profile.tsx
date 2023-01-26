@@ -7,7 +7,7 @@ import jwt_decode from "jwt-decode";
 import axios from 'axios';
 import NewsFeed from "../newsfeed/NewsFeed";
 import { useNavigate } from "react-router-dom";
-import { TabPanelProps, User } from "../../interfaces/Types";
+import { Friend, TabPanelProps, User } from "../../interfaces/Types";
 
 export function TabPanel(props: TabPanelProps) {
     const { children, value, index, ...other } = props;
@@ -67,7 +67,7 @@ const Profile: React.FC = () => {
         }
         axios.get('/friendships')
             .then(function (response) {
-                const friends = response.data.filter((friend: any) => friend.status === 'ACCEPTED');
+                const friends = response.data.filter((friend: Friend) => friend.status === 'ACCEPTED');
                 setFriendsCount(friends.length);
             })
             .catch(function (error) {

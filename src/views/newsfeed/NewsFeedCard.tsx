@@ -195,13 +195,13 @@ const NewsFeedCard: React.FC<PostsProps> = (props) => {
         }
     }
 
-    function handleKeyPressToEditPost (event: any) {
+    function handleKeyPressToEditPost (event: React.KeyboardEvent<HTMLDivElement>) {
         if(event.key === 'Enter'){
             confirmEdit();
         }
     }
 
-    function handleKeyPressToSendComment (event: any) {
+    function handleKeyPressToSendComment (event: React.KeyboardEvent<HTMLDivElement>) {
         if(event.key === 'Enter'){
             sendComment();
         }
@@ -240,13 +240,6 @@ const NewsFeedCard: React.FC<PostsProps> = (props) => {
                 title={user && user.firstname && user.lastname ? user.firstname + ' ' + user.lastname : ''}
                 subheader={date ? "Publié " + date : ''}
             />
-
-            {/* <CardMedia
-                component="img"
-                height="194"
-                image="/static/images/cards/paella.jpg"
-                alt="Paella dish"
-            /> */}
             <CardContent>
                 
             {edit ? <div>
@@ -261,11 +254,10 @@ const NewsFeedCard: React.FC<PostsProps> = (props) => {
                 
             </CardContent>
             <CardActions disableSpacing>
-                {connectedUser && user && connectedUser !== user.email ?
+                {connectedUser && user && connectedUser !== user.email &&
                 <IconButton aria-label="add to favorites" onClick={handleLike}>
-                    <FavoriteIcon /> <span className='comments-count'>{likeCount}</span>
-                </IconButton> : <IconButton aria-label="add to favorites">
-                    <FavoriteIcon /> <span className='comments-count'>{likeCount}</span>
+                    {like ? <FavoriteIcon style={{ color: 'red' }} /> :
+                    <FavoriteIcon />} <span className='comments-count'>{likeCount}</span>
                 </IconButton>}
                 <IconButton aria-label="share">
                     <ShareIcon />
