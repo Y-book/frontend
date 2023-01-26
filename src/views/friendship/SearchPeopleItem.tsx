@@ -1,13 +1,13 @@
 import { Avatar, IconButton, ListItem, ListItemAvatar, ListItemButton, ListItemText } from "@mui/material";
 import React, { useContext, useEffect } from "react";
-import { User } from "../../interfaces/Types";
+import { SearchPeopleItemProps } from "../../interfaces/Types";
 import { UserAccountContext } from "../../provider/UserProvider";
 import jwt_decode from "jwt-decode";
 import { blue } from '@mui/material/colors';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import axios from 'axios';
 
-const SearchPeopleItem: React.FC<{value: {id: number, firstname: string, lastname: string, email: string}, friendDemands: User[], friendList: User[]}> = (props) => {
+const SearchPeopleItem: React.FC<SearchPeopleItemProps> = (props) => {
     const {getSession} = useContext(UserAccountContext)
     const [connectedUser, setConnectedUser] = React.useState('');
     const [letter, setLetter] = React.useState<string | undefined>('');
@@ -27,7 +27,8 @@ const SearchPeopleItem: React.FC<{value: {id: number, firstname: string, lastnam
     function sendRequest () {        
         axios.post('/friendships', {toId: friendShipRequest.id})
             .then(function (response) {
-                console.log(response);
+                props.getFriends(props.setTotalFriendsList, props.setFriendDemands, props.setFriendList, props.setLoading);
+                props.setSearchResponse(props.searchResponse.filter((user) => user.id !== friendShipRequest.id));
             })
             .catch(function (error) {
                 console.log(error);

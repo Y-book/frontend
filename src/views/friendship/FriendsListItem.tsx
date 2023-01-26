@@ -1,19 +1,20 @@
 import { Avatar, IconButton, ListItem, ListItemAvatar, ListItemButton, ListItemText } from "@mui/material";
 import React, { useContext, useEffect } from "react";
-import { User } from "../../interfaces/Types";
+import { FriendsListAndDemandItemProps, User } from "../../interfaces/Types";
 import { UserAccountContext } from "../../provider/UserProvider";
 import jwt_decode from "jwt-decode";
 import CloseIcon from '@mui/icons-material/Close';
 import axios from 'axios';
 import { blue } from '@mui/material/colors';
 
-const FriendsListItem: React.FC<{value: any}> = (props) => {
+const FriendsListItem: React.FC<FriendsListAndDemandItemProps> = (props) => {
     const {getSession} = useContext(UserAccountContext)
     const [friend, setFriend] = React.useState<User>();
     const [connectedUser, setConnectedUser] = React.useState('');
     const [letter, setLetter] = React.useState<string | undefined>('');
 
-    const friendShip = props.value;    
+    const friendShip = props.value;
+    
     
     useEffect(() => {
         const session = getSession()
@@ -35,9 +36,12 @@ const FriendsListItem: React.FC<{value: any}> = (props) => {
     function remove () {
         if (!friend) return alert('Une erreur est survenue !')
         axios.delete('/friendships/' + friendShip.id)
-            .catch(function (error) {
-                console.log(error);
-            });
+        .then(function (response) {
+            props.getFriends(props.setTotalFriendsList, props.setFriendDemands, props.setFriendList, props.setLoading);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
     }
 
         return (

@@ -14,7 +14,7 @@ const getPosts = (setPosts: React.Dispatch<React.SetStateAction<[] | Post[]>>, p
         .then(function (response) {
             const posts = response.data;        
             if (posts.length > 1) {
-                posts.sort((post1: any, post2: any) => {
+                posts.sort((post1: Post, post2: Post) => {
                     return post2.id - post1.id;
                 });
             }
@@ -30,7 +30,7 @@ const getPosts = (setPosts: React.Dispatch<React.SetStateAction<[] | Post[]>>, p
         .then(function (response) {
             const posts = response.data;        
             if (posts.length > 1) {
-                posts.sort((post1: any, post2: any) => {
+                posts.sort((post1: Post, post2: Post) => {
                     return post2.id - post1.id;
                 });
             }
@@ -46,7 +46,7 @@ const getPosts = (setPosts: React.Dispatch<React.SetStateAction<[] | Post[]>>, p
         .then(function (response) {
             const posts = response.data;        
             if (posts.length > 1) {
-                posts.sort((post1: any, post2: any) => {
+                posts.sort((post1: Post, post2: Post) => {
                     return post2.id - post1.id;
                 });
             }
@@ -62,7 +62,7 @@ const getPosts = (setPosts: React.Dispatch<React.SetStateAction<[] | Post[]>>, p
         .then(function (response) {
             const posts = response.data;        
             if (posts.length > 1) {
-                posts.sort((post1: any, post2: any) => {
+                posts.sort((post1: Post, post2: Post) => {
                     return post2.id - post1.id;
                 });
             }
@@ -112,7 +112,7 @@ const NewsFeed: React.FC<{profile: boolean, type: string}> = (props) => {
           });
     }
 
-    function handleKeyPress (event: any) {
+    function handleKeyPress (event: React.KeyboardEvent<HTMLDivElement>) {
         if(event.key === 'Enter'){
             sendPost();
         }
