@@ -71,8 +71,8 @@ const Friendship: React.FC = () => {
             axios.post('/users/search-users', data)
               .then(function (response) {
                 const users = response.data;
-                const totalFriendsListIdFrom = totalFriendsList.map((friendship: any) => friendship.fromId);
-                const totalFriendsListIdTo = totalFriendsList.map((friendship: any) => friendship.toId);
+                const totalFriendsListIdFrom = totalFriendsList.map((friendship: any) => friendship.fromId).filter((friend: any) => friend.status !== 'IGNORED');
+                const totalFriendsListIdTo = totalFriendsList.map((friendship: any) => friendship.toId).filter((friend: any) => friend.status !== 'IGNORED');
                 const totalFriendsListId = totalFriendsListIdFrom.concat(totalFriendsListIdTo);
                 for (let i = 0; i < users.length; i++) {
                     if (users[i].email === connectedUser) {

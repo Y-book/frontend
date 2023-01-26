@@ -41,7 +41,7 @@ const FriendsListItem: React.FC<{value: any}> = (props) => {
     }
 
         return (
-            <div className="friend-demand-item">
+            <div className="friend-list-item">
                 <ListItem
                     key={0}
                     secondaryAction={

@@ -34,7 +34,7 @@ const SearchPeopleItem: React.FC<{value: {id: number, firstname: string, lastnam
             });
     }
     return (
-        <div className="friend-demand-item">
+        <div className="friend-search-item">
             <ListItem
                 key={0}
                 secondaryAction={

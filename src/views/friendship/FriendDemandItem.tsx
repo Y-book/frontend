@@ -59,6 +59,14 @@ const FriendDemandItem: React.FC<{value: any}> = (props) => {
             });
     }
 
+    function remove () {
+        if (!friendShipRequest) return alert('Une erreur est survenue !')
+        axios.delete('/friendships/' + friendShipRequest.id)
+            .catch(function (error) {
+                console.log(error);
+        });
+    }
+
     return (
         <div className="friend-demand-item">
             <ListItem
@@ -74,8 +82,12 @@ const FriendDemandItem: React.FC<{value: any}> = (props) => {
                     </div>
                     :
                     <div>
-                      En attente...
+                        En attente...
+                        <IconButton aria-label="delete" onClick={remove}>
+                                <CloseIcon />
+                        </IconButton>
                     </div>
+                    
                 }
                 disablePadding
             >
