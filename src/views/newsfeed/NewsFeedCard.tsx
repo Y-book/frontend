@@ -195,6 +195,18 @@ const NewsFeedCard: React.FC<PostsProps> = (props) => {
         }
     }
 
+    function handleKeyPressToEditPost (event: any) {
+        if(event.key === 'Enter'){
+            confirmEdit();
+        }
+    }
+
+    function handleKeyPressToSendComment (event: any) {
+        if(event.key === 'Enter'){
+            sendComment();
+        }
+    }
+
     return (
         <Card sx={{ maxWidth: 345 }}>
             <CardHeader
@@ -239,6 +251,7 @@ const NewsFeedCard: React.FC<PostsProps> = (props) => {
                 
             {edit ? <div>
                 <TextField fullWidth value={text} id="quickEditPost"
+                onKeyPress={handleKeyPressToEditPost}
                 onChange={changeText} />
             </div> : 
             <div color="text.secondary">
@@ -270,6 +283,7 @@ const NewsFeedCard: React.FC<PostsProps> = (props) => {
                 <div className='add-new-publication-container'>
                     <TextField fullWidth label="Commentaire" id="quickComment"
                     onChange={changeCommentText}
+                    onKeyPress={handleKeyPressToSendComment}
                     value={comment}
                     InputProps={{
                         endAdornment: (
@@ -280,11 +294,6 @@ const NewsFeedCard: React.FC<PostsProps> = (props) => {
                         </InputAdornment>
                         ),
                     }} />
-                </div>
-                <div className='add-button'>
-                    <Fab color="default" aria-label="add" size='large'>
-                        <span className='add-button-text'>+</span>
-                    </Fab>
                 </div>
                 <CardContent>
                     {comments.map((value, index) =>    

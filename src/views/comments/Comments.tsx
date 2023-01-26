@@ -26,7 +26,7 @@ const Comments: React.FC<CommentsProps> = (props) => {
     useEffect(() => {
         if (!user) {
             axios.get('/users/' + comment.userId)
-            .then(function (response) {
+            .then(function (response) {                
                 setUser(response.data);
                 setLetter(response.data.firstname[0].toUpperCase());
             })
@@ -73,6 +73,12 @@ const Comments: React.FC<CommentsProps> = (props) => {
         setEdit(false);
     }
 
+    function handleKeyPress (event: any) {
+        if(event.key === 'Enter'){
+            confirmEdit();
+        }
+    }
+
     return (        
         <ListItem alignItems="flex-start">
             <ListItemAvatar>
@@ -91,6 +97,7 @@ const Comments: React.FC<CommentsProps> = (props) => {
                     color="text.primary"
                 >
                     {user && user.firstname && user.lastname ? user.firstname + ' ' + user.lastname : ''}
+                    {user?.email === connectedUser &&
                     <span style={{float: 'right'}}>
                         {!edit ? 
                         <span>
@@ -111,10 +118,12 @@ const Comments: React.FC<CommentsProps> = (props) => {
                             </IconButton>
                         </span>}
                     </span>
+                    }
                 </Typography>
                 <br />
                 {edit ? 
                     <input type="text" value={text} id="quickEditComment"
+                    onKeyPress={handleKeyPress}
                     onChange={changeText} />
                      : 
                 <Typography

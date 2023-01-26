@@ -51,7 +51,7 @@ const Login: React.FC<{setConnectedUser: React.Dispatch<React.SetStateAction<boo
                     <TextField label="E-mail" id="outlined-size-normal" onChange={changeMail} />
                 </div>
                 <div>
-                    <TextField label="Mot de passe" id="outlined-size-normal" onChange={changePassword} />
+                    <TextField type="password" label="Mot de passe" id="outlined-password-input" onChange={changePassword} />
                 </div>
             </Box>
             <Button color='inherit' variant="contained" onClick={connection}>Se connecter</Button>

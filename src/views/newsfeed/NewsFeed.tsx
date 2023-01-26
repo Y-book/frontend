@@ -112,6 +112,12 @@ const NewsFeed: React.FC<{profile: boolean, type: string}> = (props) => {
           });
     }
 
+    function handleKeyPress (event: any) {
+        if(event.key === 'Enter'){
+            sendPost();
+        }
+    }
+
     return (
         <div className='main-container'>
             {loading && <div className="loading"><CircularProgress /></div>}
@@ -119,6 +125,7 @@ const NewsFeed: React.FC<{profile: boolean, type: string}> = (props) => {
                 <TextField fullWidth label="Publication Rapide" id="quickPost"
                 onChange={changeText}
                 value={text}
+                onKeyPress={handleKeyPress}
                 InputProps={{
                     endAdornment: (
                       <InputAdornment position="end" onClick={sendPost}>
