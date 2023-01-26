@@ -57,9 +57,7 @@ const Friendship: React.FC = () => {
 
     function search(event: React.ChangeEvent<HTMLInputElement>) {
         const searchText = event.target.value;
-        setText(event.target.value);
-        console.log(searchText);
-        
+        setText(event.target.value);        
         if (searchText === '') {
             setSearchDone(false);
             setSearchResponse([]);
