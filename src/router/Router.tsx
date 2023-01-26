@@ -31,7 +31,9 @@ function Router() {
 
   return (
     <div className="Router">
-        {connectedUser && <Navbar setConnectedUser={setConnectedUser} />}
+        {/* {connectedUser &&  */}
+        <Navbar connectedUser={connectedUser}setConnectedUser={setConnectedUser} />
+        {/* } */}
         {loading && <div className="loading"><CircularProgress /></div>}
         {!loading && 
           <Routes>

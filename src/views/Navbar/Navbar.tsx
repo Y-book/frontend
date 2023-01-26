@@ -23,8 +23,6 @@ import { NavbarProps } from '../../interfaces/Types';
 import { blue } from '@mui/material/colors';
 import LogoutIcon from '@mui/icons-material/Logout';
 
-
-
   const Navbar: React.FC<NavbarProps> = (props) => {
     const {logOut} = React.useContext(UserAccountContext)
     const navigate = useNavigate();
@@ -159,7 +157,6 @@ import LogoutIcon from '@mui/icons-material/Logout';
               variant="h6"
               noWrap
               component="div"
-              sx={{ display: { xs: 'none', sm: 'block' } }}
             >
               Y-Book
             </Typography>
@@ -203,18 +200,20 @@ import LogoutIcon from '@mui/icons-material/Logout';
                 </Badge>
               </IconButton>
             </Box>
-            <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-              <IconButton
-                size="large"
-                aria-label="show more"
-                aria-controls={mobileMenuId}
-                aria-haspopup="true"
-                onClick={handleMobileMenuOpen}
-                color="inherit"
-              >
-                <MoreIcon />
-              </IconButton>
-            </Box>
+            {props.connectedUser &&
+              <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+                <IconButton
+                  size="large"
+                  aria-label="show more"
+                  aria-controls={mobileMenuId}
+                  aria-haspopup="true"
+                  onClick={handleMobileMenuOpen}
+                  color="inherit"
+                >
+                  <MoreIcon />
+                </IconButton>
+              </Box>
+            }
           </Toolbar>
         </AppBar>
         {renderMobileMenu}

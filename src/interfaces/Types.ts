@@ -45,6 +45,7 @@ export interface ExpandMoreProps extends IconButtonProps {
 
 export type NavbarProps = {
     setConnectedUser: React.Dispatch<React.SetStateAction<boolean>>
+    connectedUser: boolean,
 }
 
 export type PostsProps = {
