@@ -5,6 +5,7 @@ import { UserAccountContext } from "../../provider/UserProvider";
 import jwt_decode from "jwt-decode";
 import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
+import axios from 'axios';
 import { blue } from '@mui/material/colors';
 
 const FriendsListItem: React.FC<{value: any}> = (props) => {
@@ -35,33 +36,37 @@ const FriendsListItem: React.FC<{value: any}> = (props) => {
     }, [friendShip, connectedUser, getSession])
 
     function remove () {
-        console.log("delete");
+        if (!friend) return alert('Une erreur est survenue !')
+        axios.delete('/friendships/' + friendShip.id)
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 
-    return (
-        <div className="friend-demand-item">
-            <ListItem
-                key={0}
-                secondaryAction={
-                    <div>
-                      <IconButton aria-label="delete" onClick={remove}>
-                            <CloseIcon />
-                      </IconButton>
-                    </div>
-                }
-                disablePadding
-            >
-            <ListItemButton>
-              <ListItemAvatar>
-                <Avatar sx={{ bgcolor: blue[100], color: 'black' }} aria-label="recipe">
-                    {letter}
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText id={friend?.email} primary={friend?.firstname + " " + friend?.lastname} />
-            </ListItemButton>
-          </ListItem>
-        </div>
-    );
+        return (
+            <div className="friend-demand-item">
+                <ListItem
+                    key={0}
+                    secondaryAction={
+                        <div>
+                        <IconButton aria-label="delete" onClick={remove}>
+                                <CloseIcon />
+                        </IconButton>
+                        </div>
+                    }
+                    disablePadding
+                >
+                <ListItemButton>
+                <ListItemAvatar>
+                    <Avatar sx={{ bgcolor: blue[100], color: 'black' }} aria-label="recipe">
+                        {letter}
+                    </Avatar>
+                </ListItemAvatar>
+                <ListItemText id={friend?.email} primary={friend?.firstname + " " + friend?.lastname} />
+                </ListItemButton>
+            </ListItem>
+            </div>
+        );
 }
 
 export default FriendsListItem;
