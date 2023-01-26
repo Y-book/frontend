@@ -13,7 +13,6 @@ import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import { HiHome } from 'react-icons/hi';
 import SmsIcon from '@mui/icons-material/Sms';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import SettingsIcon from '@mui/icons-material/Settings';
 import PeopleIcon from '@mui/icons-material/People';
@@ -24,45 +23,7 @@ import { NavbarProps } from '../../interfaces/Types';
 import { blue } from '@mui/material/colors';
 import LogoutIcon from '@mui/icons-material/Logout';
 
-const Search = styled('div')(({ theme }) => ({
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.white, 0.15),
-    '&:hover': {
-      backgroundColor: alpha(theme.palette.common.white, 0.25),
-    },
-    marginRight: theme.spacing(2),
-    marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing(3),
-      width: 'auto',
-    },
-  }));
-  
-  const SearchIconWrapper = styled('div')(({ theme }) => ({
-    padding: theme.spacing(0, 1),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  }));
-  
-  const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: 'inherit',
-    '& .MuiInputBase-input': {
-      padding: theme.spacing(1, 1, 1, 0),
-      // vertical padding + font size from searchIcon
-      paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-      transition: theme.transitions.create('width'),
-      width: '100%',
-      [theme.breakpoints.up('md')]: {
-        width: '20ch',
-      },
-    },
-  }));
+
 
   const Navbar: React.FC<NavbarProps> = (props) => {
     const {logOut} = React.useContext(UserAccountContext)
@@ -149,17 +110,6 @@ const Search = styled('div')(({ theme }) => ({
           <p>Messages</p>
         </MenuItem>
         </NavLink>
-        <MenuItem onClick={CloseAfterCLick}>
-          <IconButton
-            size="large"
-            color="inherit"
-          >
-            <Badge color="error">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
-          <p>Notifications</p>
-        </MenuItem>
         <NavLink to="/friendship" style={{ textDecoration: 'none', display: 'block', color: "inherit"}}>
         <MenuItem onClick={goToFriendship}>
           <IconButton
@@ -213,16 +163,7 @@ const Search = styled('div')(({ theme }) => ({
             >
               Y-Book
             </Typography>
-            </NavLink>  
-            <Search>
-              <SearchIconWrapper>
-                <SearchIcon />
-              </SearchIconWrapper>
-              <StyledInputBase
-                placeholder="Search…"
-                inputProps={{ 'aria-label': 'search' }}
-              />
-            </Search>
+            </NavLink>
             <Box sx={{ flexGrow: 1 }} />
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <NavLink to="/listMessage" style={{ textDecoration: 'none', display: 'block', color: "inherit"}}>
@@ -232,14 +173,7 @@ const Search = styled('div')(({ theme }) => ({
                 </Badge>
               </IconButton>
               </NavLink>
-              <IconButton
-                size="large"
-                color="inherit"
-              >
-                <Badge color="error">
-                  <NotificationsIcon />
-                </Badge>
-              </IconButton>
+              <NavLink to="/friendship" style={{ textDecoration: 'none', display: 'block', color: "inherit"}}>
               <IconButton
                 size="large"
                 color="inherit"
@@ -248,6 +182,8 @@ const Search = styled('div')(({ theme }) => ({
                   <PeopleIcon />
                 </Badge>
               </IconButton>
+              </NavLink>
+              <NavLink to="/profile" style={{ textDecoration: 'none', display: 'block', color: "inherit"}}>
               <IconButton
                 size="large"
                 color="inherit"
@@ -256,12 +192,14 @@ const Search = styled('div')(({ theme }) => ({
                   <AccountCircle />
                 </Badge>
               </IconButton>
+              </NavLink>
               <IconButton
                 size="large"
                 color="inherit"
+                onClick={logout}
               >
                 <Badge color="error">
-                  <SettingsIcon />
+                  <LogoutIcon />
                 </Badge>
               </IconButton>
             </Box>

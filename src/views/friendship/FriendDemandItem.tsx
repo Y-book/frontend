@@ -6,6 +6,7 @@ import jwt_decode from "jwt-decode";
 import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
 import { blue } from '@mui/material/colors';
+import axios from 'axios';
 
 const FriendDemandItem: React.FC<{value: any}> = (props) => {
     const {getSession} = useContext(UserAccountContext)
@@ -34,12 +35,28 @@ const FriendDemandItem: React.FC<{value: any}> = (props) => {
         }
     }, [friendShipRequest, connectedUser, getSession])
 
-    function accept () {
-        console.log("accept");
+    function accept(accepted : any) {
+        if (!friend) return alert('Une erreur est survenue !')
+        axios.patch('/friendships', {fromId: friend.id, status: 'ACCEPTED'})
+            .then(function (response) {
+                accepted = response.data;
+                setFriend(friendShipRequest.accepted)
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 
-    function refuse () {
-        console.log("refuse");
+    function refuse(ignored: any) {
+        if (!friend) return alert('Une erreur est survenue !')
+        axios.patch('/friendships', {fromId: friend.id, status: 'IGNORED'})
+            .then(function (response) {
+                ignored = response.data;
+                setFriend(friendShipRequest.ignored)
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 
     return (
