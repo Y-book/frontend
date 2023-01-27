@@ -15,9 +15,7 @@ const FriendDemandItem: React.FC<FriendsListAndDemandItemProps> = (props) => {
     const [connectedUser, setConnectedUser] = React.useState('');
     const [letter, setLetter] = React.useState<string | undefined>('');
 
-    const friendShipRequest = props.value;
-    console.log(friendShipRequest);
-    
+    const friendShipRequest = props.value;    
     
     useEffect(() => {
         const session = getSession()
