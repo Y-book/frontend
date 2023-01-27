@@ -9,7 +9,6 @@ import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import { blue } from '@mui/material/colors';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -259,9 +258,6 @@ const NewsFeedCard: React.FC<PostsProps> = (props) => {
                     {like ? <FavoriteIcon style={{ color: 'red' }} /> :
                     <FavoriteIcon />} <span className='comments-count'>{likeCount}</span>
                 </IconButton>}
-                <IconButton aria-label="share">
-                    <ShareIcon />
-                </IconButton>
                 <ExpandMore
                 expand={expanded}
                 onClick={handleExpandClick}
