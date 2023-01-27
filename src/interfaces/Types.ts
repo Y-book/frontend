@@ -12,6 +12,7 @@ export type Post = {
     },
     _liked: boolean,
     postComments: Comment[],
+    user: User,
 }
 
 export type User = {
@@ -28,6 +29,7 @@ export type Comment = {
     userId: number,
     postId: number,
     text: string,
+    user: User,
 }
 
 export type Friend = {
@@ -60,10 +62,6 @@ export type PostsProps = {
 export type CommentsProps = {
     comment: Comment,
     connectedUser: string,
-    getPosts: (setPosts: React.Dispatch<React.SetStateAction<[] | Post[]>>, profile: boolean, type: string) => void,
-    setPosts: React.Dispatch<React.SetStateAction<[] | Post[]>>,
-    profile: boolean,
-    type: string,
     setComments: React.Dispatch<React.SetStateAction<[] | Comment[]>>,
     comments: Comment[],
 }

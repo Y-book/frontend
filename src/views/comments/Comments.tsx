@@ -8,34 +8,20 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
-import { Comment, CommentsProps, User } from "../../interfaces/Types";
+import {CommentsProps } from "../../interfaces/Types";
 
 const Comments: React.FC<CommentsProps> = (props) => { 
     const navigate = useNavigate();
-    const [letter, setLetter] = React.useState('');
     const [edit, setEdit] = React.useState(false);
-    const [user, setUser] = React.useState<User>();
     const [text, setText] = React.useState(props.comment.text);
-    const [comment] = React.useState<Comment>(props.comment);
+    const user = props.comment.user;    
+    const letter = user.firstname[0].toUpperCase();
+    const comment = props.comment;    
 
     const connectedUser = props.connectedUser;
     if (connectedUser === '') {
         navigate('/login');
     }
-
-    useEffect(() => {
-        if (!user) {
-            axios.get('/users/' + comment.userId)
-            .then(function (response) {                
-                setUser(response.data);
-                setLetter(response.data.firstname[0].toUpperCase());
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-        }
-        
-    }, [user, comment.userId])
 
     function changeText(event: React.ChangeEvent<HTMLInputElement>) {
         setText(event.target.value);
@@ -45,10 +31,9 @@ const Comments: React.FC<CommentsProps> = (props) => {
         setEdit(true);
     }
 
-    const deleteItem = () => {
+    const deleteItem = () => {        
         axios.delete('/comments/' + comment.id)
         .then(function (response) {
-            props.getPosts(props.setPosts, props.profile, props.type);
             props.setComments(props.comments.filter((item) => item.id !== comment.id));
         })
     }

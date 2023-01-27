@@ -35,22 +35,42 @@ import { ExpandMoreProps, PostsProps, User } from '../../interfaces/Types';
     }),
   }));
 
+  function dateCompare(createdAt: string){
+    const today = new Date();
+    const postDate = new Date(createdAt);
+
+    const todayDate = today.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })
+    const postDateFormat = postDate.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })
+
+    if (todayDate === postDateFormat) {
+        const todayHours = today.getHours();
+        const postHours = postDate.getHours();
+        if (todayHours === postHours) {
+            return "il y a quelques minutes";
+        } else {
+            return `il y a ${todayHours - postHours} heures`;
+        }
+    } else {
+        return `le ${postDateFormat}`;
+    }
+}
+
 const NewsFeedCard: React.FC<PostsProps> = (props) => {
     const navigate = useNavigate();
     const {getSession} = useContext(UserAccountContext)
     const [expanded, setExpanded] = React.useState(false);
-    const [user, setUser] = React.useState<User>();
-    const [letter, setLetter] = React.useState('');
-    const [date, setDate] = React.useState('');
     const [connectedUser, setConnectedUser] = React.useState('');
     const [edit, setEdit] = React.useState(false);
     const [text, setText] = React.useState(props.post.htmlContent);
     const [like, setLike] = React.useState(false);
     const [likeCount, setLikeCount] = React.useState(props.post._count.postLikes);
     const [likeData, setLikeData] = React.useState<any>({});
-    const [comments, setComments] = React.useState(props.post.postComments);
+    const [comments, setComments] = React.useState([...props.post.postComments]);
     const [comment, setComment] = React.useState('');
-    const [post] = React.useState(props.post);
+    const post = props.post;
+    const user = props.post.user;
+    const letter = user.firstname[0].toUpperCase();
+    const date = dateCompare(props.post.createdAt);
 
     useEffect(() => {
         const session = getSession()
@@ -61,19 +81,6 @@ const NewsFeedCard: React.FC<PostsProps> = (props) => {
             } else {
                 navigate('/login');
             }
-        
-        if (!user) {            
-            axios.get('/users/' + post.userId)
-            .then(function (response) {
-                setUser(response.data);
-                setLetter(response.data.firstname[0].toUpperCase());
-                const finalDate = dateCompare(post.createdAt)
-                setDate(finalDate);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-        }
         axios.get('/likes/' + post.id)
         .then(function (response) {
             if (response.data[0]) {
@@ -85,26 +92,6 @@ const NewsFeedCard: React.FC<PostsProps> = (props) => {
             console.log(error);
         });
     }, [getSession, post.createdAt, post.userId, user, post.id, comments, navigate])
-
-    function dateCompare(createdAt: string){
-        const today = new Date();
-        const postDate = new Date(createdAt);
-
-        const todayDate = today.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })
-        const postDateFormat = postDate.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })
-
-        if (todayDate === postDateFormat) {
-            const todayHours = today.getHours();
-            const postHours = postDate.getHours();
-            if (todayHours === postHours) {
-                return "il y a quelques minutes";
-            } else {
-                return `il y a ${todayHours - postHours} heures`;
-            }
-        } else {
-            return `le ${postDateFormat}`;
-        }
-    }
 
     const handleExpandClick = () => {
         setExpanded(!expanded);
@@ -253,8 +240,12 @@ const NewsFeedCard: React.FC<PostsProps> = (props) => {
                 
             </CardContent>
             <CardActions disableSpacing>
-                {connectedUser && user && connectedUser !== user.email &&
+                {connectedUser && user && connectedUser !== user.email ?
                 <IconButton aria-label="add to favorites" onClick={handleLike}>
+                    {like ? <FavoriteIcon style={{ color: 'red' }} /> :
+                    <FavoriteIcon />} <span className='comments-count'>{likeCount}</span>
+                </IconButton> :
+                <IconButton aria-label="add to favorites">
                     {like ? <FavoriteIcon style={{ color: 'red' }} /> :
                     <FavoriteIcon />} <span className='comments-count'>{likeCount}</span>
                 </IconButton>}
@@ -287,7 +278,7 @@ const NewsFeedCard: React.FC<PostsProps> = (props) => {
                     {comments.map((value, index) =>    
                             <div key={index}>
                                 <Divider />
-                                <Comments comment={value} connectedUser={connectedUser} getPosts={props.getPosts} setPosts={props.setPosts} profile={props.profile} type={props.type} setComments={setComments} comments={comments}></Comments>
+                                <Comments comment={value} connectedUser={connectedUser} setComments={setComments} comments={comments}></Comments>
                             </div>
                         )}
                 </CardContent>
