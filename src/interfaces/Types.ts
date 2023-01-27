@@ -41,6 +41,27 @@ export type Friend = {
     to: User,
 }
 
+export type Conversation = {
+    id: number,
+    createdAt: string,
+    updatedAt: string,
+    fromId: number,
+    toId: number,
+    from: User,
+    to: User,
+    messages: Message[],
+}
+
+export type Message = {
+    id: number,
+    createdAt: string,
+    updatedAt: string,
+    conversationId: number,
+    userId: number,
+    content: string,
+    from: User,
+}
+
 export interface ExpandMoreProps extends IconButtonProps {
     expand: boolean;
 }

@@ -146,13 +146,13 @@ const NewsFeed: React.FC<{profile: boolean, type: string}> = (props) => {
             <div className='publication-feed-container'>
                 <div className='feed-block' style={{backgroundColor: blue[100]}}>
 
-                {posts.map((value, index) =>    
-                    <div className='feed-card' key={index}>
-                        <NewsFeedCard post={value} getPosts={getPosts} setPosts={setPosts} profile={profile} type={type} posts={posts}></NewsFeedCard>
+                    {posts.map((value, index) =>    
+                        <div className='feed-card' key={index}>
+                            <NewsFeedCard post={value} getPosts={getPosts} setPosts={setPosts} profile={profile} type={type} posts={posts}></NewsFeedCard>
+                        </div>
+                    )}
                     </div>
-                )}
-                </div>
-            </div>}
+                </div>}
             {!loading && profile &&
             <div className='publication-feed-container-for-profile'>
                 <div className='feed-block' style={{backgroundColor: blue[100]}}>

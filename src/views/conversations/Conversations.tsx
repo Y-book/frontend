@@ -1,0 +1,36 @@
+import React, {useEffect} from "react";
+import axios from "axios";
+import { blue } from '@mui/material/colors';
+import { Conversation } from "../../interfaces/Types";
+import ConversationItem from "./ConversationItem";
+import { List } from "@mui/material";
+
+const Conversations: React.FC = () => {
+    const [conversations, setConversations] = React.useState<[] | Conversation[]>([]);
+
+    useEffect(() => {
+        if (conversations.length === 0) {
+            axios.get('/conversations')
+            .then(function (response) {
+                setConversations(response.data);
+            })
+            .catch(function (error) {
+            console.log(error);
+            });
+        }
+    }, [conversations.length]);
+
+    return (
+        <div className='main-container' style={{width: '100%', maxWidth: 360}}>
+            <div className='conversation-block' style={{backgroundColor: blue[100], position: 'absolute', top: "50px", width: "100%"}}>
+                <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+                    {conversations.map((value, index) =>    
+                        <ConversationItem conversation={value} key={index} />
+                    )}
+                </List>
+            </div>
+        </div>
+    );
+}
+
+export default Conversations;
