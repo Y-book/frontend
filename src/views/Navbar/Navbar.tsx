@@ -162,6 +162,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
             </Typography>
             </NavLink>
             <Box sx={{ flexGrow: 1 }} />
+            {props.connectedUser &&
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <NavLink to="/listMessage" style={{ textDecoration: 'none', display: 'block', color: "inherit"}}>
               <IconButton size="large" aria-label="show 4 new mails" color="inherit">
@@ -199,7 +200,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
                   <LogoutIcon />
                 </Badge>
               </IconButton>
-            </Box>
+            </Box>}
             {props.connectedUser &&
               <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
                 <IconButton
