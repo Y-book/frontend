@@ -94,7 +94,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
           <p>Accueil</p>
         </MenuItem>
         </NavLink>
-        <NavLink to="/listMessage" style={{ textDecoration: 'none', display: 'block', color: "inherit"}}>
+        <NavLink to="/conversations" style={{ textDecoration: 'none', display: 'block', color: "inherit"}}>
         <MenuItem onClick={CloseAfterCLick}>
           <IconButton size="large" aria-label="show 4 new mails" color="inherit">
             <Badge color="error">

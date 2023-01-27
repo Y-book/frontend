@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { CircularProgress, Fab, InputAdornment, List, TextField } from '@mui/material';
+import { CircularProgress, List, TextField } from '@mui/material';
 
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
@@ -33,9 +33,6 @@ const getFriends = (setTotalFriendsList: React.Dispatch<React.SetStateAction<[] 
 const Friendship: React.FC = () => {
     const {getSession} = useContext(UserAccountContext)
     const [value, setValue] = React.useState(0);
-    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-        setValue(newValue);
-    };
     const [totalFriendsList, setTotalFriendsList] = React.useState<Friend[]>([]);
     const [friendDemands, setFriendDemands] = React.useState<Friend[]>([]);
     const [friendList, setFriendList] = React.useState<Friend[]>([]);
@@ -55,9 +52,9 @@ const Friendship: React.FC = () => {
         getFriends(setTotalFriendsList, setFriendDemands, setFriendList, setLoading);
     }, [getSession]);
 
-    // function changeText(event: React.ChangeEvent<HTMLInputElement>) {
-    //     setText(event.target.value);
-    // }
+    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+        setValue(newValue);
+    };
 
     function search(event: React.ChangeEvent<HTMLInputElement>) {
         const searchText = event.target.value;

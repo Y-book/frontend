@@ -3,8 +3,6 @@ import Home from '../views/home/Home';
 import Login from '../views/login/Login';
 import Signup from '../views/signup/Signup';
 import SignupCode from '../views/signup/Signup-code';
-import ListMessage from '../views/messaging/ListMessage';
-// import { io } from "socket.io-client";
 import ResetPassword from '../views/login/ResetPassword';
 import { UserAccountContext } from '../provider/UserProvider';
 import NewsFeed from '../views/newsfeed/NewsFeed';
@@ -14,6 +12,8 @@ import { CircularProgress } from '@mui/material';
 import './Router.css';
 import Friendship from '../views/friendship/Friendship';
 import Profile from '../views/profile/Profile';
+import Conversations from '../views/conversations/Conversations';
+import Messages from '../views/messages/Messages';
 
 function Router() {
   const {getValidSession} = useContext(UserAccountContext)
@@ -45,8 +45,8 @@ function Router() {
             {!connectedUser && <Route path="/code" element={<SignupCode />} />}
             {!connectedUser && <Route path="/reset-password" element={<ResetPassword />} />}
 
-            {connectedUser && <Route path="/listMessage" element={<ListMessage />} />}
-            {/* // <Route path="message" element={<ChatPage socket={socket} />} /> */}
+            {connectedUser && <Route path="/conversations" element={<Conversations />} />}
+            {connectedUser && <Route path="/conversation" element={<Messages />} />}
             {connectedUser && <Route path="/friendship" element={<Friendship />} />}
             {connectedUser && <Route path="/profile" element={<Profile />} />}
           </Routes>}
