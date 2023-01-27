@@ -1,5 +1,5 @@
 import "./Comments.css";
-import React, { useEffect } from 'react';
+import React from 'react';
 import axios from 'axios';
 import { Avatar, IconButton, ListItem, ListItemAvatar, ListItemText, Typography } from "@mui/material";
 import { grey } from '@mui/material/colors';
@@ -14,6 +14,7 @@ const Comments: React.FC<CommentsProps> = (props) => {
     const navigate = useNavigate();
     const [edit, setEdit] = React.useState(false);
     const [text, setText] = React.useState(props.comment.text);
+    
     const user = props.comment.user;    
     const letter = user.firstname[0].toUpperCase();
     const comment = props.comment;    

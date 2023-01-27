@@ -70,7 +70,7 @@ const NewsFeedCard: React.FC<PostsProps> = (props) => {
     const post = props.post;
     const user = props.post.user;
     const letter = user.firstname[0].toUpperCase();
-    const date = dateCompare(props.post.createdAt);
+    const date = dateCompare(props.post.createdAt);   
 
     useEffect(() => {
         const session = getSession()
