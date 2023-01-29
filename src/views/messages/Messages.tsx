@@ -27,6 +27,7 @@ const Messages: React.FC = () => {
     const [messages, setMessages] = React.useState<any>([]);
     const [loading, setLoading] = React.useState(true);
     const [text, setText] = React.useState('');
+    const lastsentMessageReference = React.useRef<any>(null);
 
     useEffect(() => {
         getConversation(location.state.conversation.id, setConversation, setMessages, setLoading)
@@ -35,6 +36,8 @@ const Messages: React.FC = () => {
             getConversation(location.state.conversation.id, setConversation, setMessages, setLoading)
         });
     }, [location.state.conversation, conversation.id]);
+
+    useEffect(() => { lastsentMessageReference.current?.scrollIntoView({ behavior: 'smooth' }) }, [messages]);
 
     function changeText(event: React.ChangeEvent<HTMLInputElement>) {
         setText(event.target.value);
@@ -86,7 +89,9 @@ const Messages: React.FC = () => {
                             </li>
                             )
                         )}
+                        <div ref={lastsentMessageReference}></div>
                     </ul>
+                    
                 </div>
             }
             <div className='text_input'>
