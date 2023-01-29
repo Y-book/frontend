@@ -4,6 +4,9 @@ import { useLocation } from "react-router-dom";
 import { Message } from "../../interfaces/Types";
 import './Messages.css';
 import axios from 'axios';
+import connect from 'socket.io-client';
+
+const socket = connect("http://127.0.0.1:8000")
 
 const getConversation = (conversationId: number, setConversation: React.Dispatch<any>, setMessages: React.Dispatch<any>, setLoading: React.Dispatch<React.SetStateAction<boolean>>) => {
     axios.get('/conversations/' + conversationId)
@@ -27,7 +30,11 @@ const Messages: React.FC = () => {
 
     useEffect(() => {
         getConversation(location.state.conversation.id, setConversation, setMessages, setLoading)
-    }, [location.state.conversation]);
+        socket.emit('conv', conversation.id);
+        socket.on('receive_message', () => {
+            getConversation(location.state.conversation.id, setConversation, setMessages, setLoading)
+        });
+    }, [location.state.conversation, conversation.id]);
 
     function changeText(event: React.ChangeEvent<HTMLInputElement>) {
         setText(event.target.value);
@@ -50,7 +57,8 @@ const Messages: React.FC = () => {
         };
 
         axios.post('/messages', data)
-          .then(function (response) {
+          .then(async function (response) {
+            await socket.emit('send_message', response.data);
             getConversation(location.state.conversation.id, setConversation, setMessages, setLoading)
             setText('');
           })
@@ -64,22 +72,23 @@ const Messages: React.FC = () => {
             {loading && <div className="loading"><CircularProgress /></div>}
             {!loading &&
                 <div className="chat-container">
-                <ul className="chat">
-                    {messages.map((value: Message, index: number) =>
-                        value.from.id === user.id ? ( 
-                        <li className="message right" key={index}>
-                            <p className="name">{value.from.firstname} {value.from.lastname}</p>
-                            <p>{value.content}</p>
-                        </li>
-                        ) : (
-                            <li className="message left" key={index}>
-                            <p className="name">{value.from.firstname} {value.from.lastname}</p>
-                            <p>{value.content}</p>
-                        </li>
-                        )
-                    )}
-                </ul>
-            </div>}
+                    <ul className="chat">
+                        {messages.map((value: Message, index: number) =>
+                            value.from.id === user.id ? ( 
+                            <li className="message right" key={index}>
+                                <p className="name">{value.from.firstname} {value.from.lastname}</p>
+                                <p>{value.content}</p>
+                            </li>
+                            ) : (
+                                <li className="message left" key={index}>
+                                <p className="name">{value.from.firstname} {value.from.lastname}</p>
+                                <p>{value.content}</p>
+                            </li>
+                            )
+                        )}
+                    </ul>
+                </div>
+            }
             <div className='text_input'>
                 <TextField fullWidth label="Message" id="quickComment"
                 onChange={changeText}
