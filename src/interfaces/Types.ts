@@ -62,6 +62,10 @@ export type Message = {
     from: User,
 }
 
+export type Like = {
+    id: number,
+}
+
 export interface ExpandMoreProps extends IconButtonProps {
     expand: boolean;
 }

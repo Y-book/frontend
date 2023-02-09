@@ -62,7 +62,6 @@ export const UserAccountProvider: React.FC<{children?: React.ReactElement|React.
 
                 },
                 newPasswordRequired: function (data) {
-                    console.log("newPasswordRequired:",data)
                     resolve(data)
                 }
             });

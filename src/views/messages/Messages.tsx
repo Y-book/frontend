@@ -1,14 +1,14 @@
 import { CircularProgress, Fab, InputAdornment, TextField } from "@mui/material";
 import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { Message } from "../../interfaces/Types";
+import { Conversation, Message } from "../../interfaces/Types";
 import './Messages.css';
 import axios from 'axios';
 import connect from 'socket.io-client';
 
 const socket = connect("http://127.0.0.1:8000")
 
-const getConversation = (conversationId: number, setConversation: React.Dispatch<any>, setMessages: React.Dispatch<any>, setLoading: React.Dispatch<React.SetStateAction<boolean>>) => {
+const getConversation = (conversationId: number, setConversation: React.Dispatch<Conversation>, setMessages: React.Dispatch<Message[]>, setLoading: React.Dispatch<React.SetStateAction<boolean>>) => {
     axios.get('/conversations/' + conversationId)
     .then(function (response) {
         setConversation(response.data);
@@ -23,8 +23,8 @@ const getConversation = (conversationId: number, setConversation: React.Dispatch
 const Messages: React.FC = () => {
     const location = useLocation();
     const { user } = location.state;
-    const [conversation, setConversation] = React.useState<any>({});
-    const [messages, setMessages] = React.useState<any>([]);
+    const [conversation, setConversation] = React.useState<Conversation | any>({});
+    const [messages, setMessages] = React.useState<Message[]>([]);
     const [loading, setLoading] = React.useState(true);
     const [text, setText] = React.useState('');
     const lastsentMessageReference = React.useRef<any>(null);
@@ -35,9 +35,8 @@ const Messages: React.FC = () => {
         socket.on('receive_message', () => {
             getConversation(location.state.conversation.id, setConversation, setMessages, setLoading)
         });
-    }, [location.state.conversation, conversation.id]);
-
-    useEffect(() => { lastsentMessageReference.current?.scrollIntoView({ behavior: 'smooth' }) }, [messages]);
+        lastsentMessageReference.current?.scrollIntoView({ behavior: 'smooth' })
+    }, [location.state.conversation, conversation.id, messages]);
 
     function changeText(event: React.ChangeEvent<HTMLInputElement>) {
         setText(event.target.value);

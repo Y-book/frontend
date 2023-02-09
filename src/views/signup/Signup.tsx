@@ -43,7 +43,7 @@ const Signup: React.FC = () => {
             const user_name=new CognitoUserAttribute({Name:"name",Value:name});
             const user_given_name=new CognitoUserAttribute({Name:"given_name",Value:given_name});
             const user_email=new CognitoUserAttribute({Name:"email",Value:email});
-            userPool.signUp(email, password, [user_name,user_given_name,user_email], [], (err, data) => {
+            userPool.signUp(email, password, [user_name,user_given_name,user_email], [], (err) => {
                       if (err) {
                         if (err.message.includes("Password did not conform with policy")) {
                             alert("Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial");

@@ -103,7 +103,7 @@ const Friendship: React.FC = () => {
                 />
                 </div>}
                 {!loading && searchDone &&<div className='search-result-container'>
-                    <List dense sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+                    <List dense sx={{ width: '100%', bgcolor: 'background.paper' }}>
                         {searchResponse.map((value, index) =>    
                             <div className='feed-card' key={index}>
                                 <SearchPeopleItem value={value} getFriends={getFriends} setTotalFriendsList={setTotalFriendsList} setFriendDemands={setFriendDemands} setFriendList={setFriendList} setLoading={setLoading} setSearchResponse={setSearchResponse} searchResponse={searchResponse} ></SearchPeopleItem>
@@ -122,7 +122,7 @@ const Friendship: React.FC = () => {
                             </Tabs>
                         </Box>
                         <TabPanel value={value} index={0}>
-                            <List dense sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+                            <List dense sx={{ width: '100%', bgcolor: 'background.paper' }}>
                                 {friendList.map((value, index) =>    
                                     <div className='feed-card' key={index}>
                                         <FriendsListItem value={value} getFriends={getFriends} setTotalFriendsList={setTotalFriendsList} setFriendDemands={setFriendDemands} setFriendList={setFriendList} setLoading={setLoading} ></FriendsListItem>
@@ -131,7 +131,7 @@ const Friendship: React.FC = () => {
                             </List>
                         </TabPanel>
                         <TabPanel value={value} index={1}>
-                            <List dense sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+                            <List dense sx={{ width: '100%', bgcolor: 'background.paper' }}>
                                 {friendDemands.map((value, index) =>    
                                     <div className='feed-card' key={index}>
                                         <FriendDemandItem value={value} getFriends={getFriends} setTotalFriendsList={setTotalFriendsList} setFriendDemands={setFriendDemands} setFriendList={setFriendList} setLoading={setLoading} ></FriendDemandItem>
