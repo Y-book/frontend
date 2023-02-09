@@ -23,11 +23,11 @@ const Conversations: React.FC = () => {
     }, [conversations.length]);
 
     return (
-        <div className='main-container' style={{width: '100%', maxWidth: 360}}>
+        <div className='main-container' style={{width: '100%'}}>
             {loading && <div className="loading"><CircularProgress /></div>}
             {!loading &&
-            <div className='conversation-block' style={{backgroundColor: blue[100], position: 'absolute', top: "50px", width: "100%"}}>
-                <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+            <div className='conversation-block' style={{backgroundColor: 'background.paper', position: 'fixed', top: "50px", width: "100%"}}>
+                <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
                     {conversations.map((value, index) =>    
                         <ConversationItem conversation={value} key={index} />
                     )}
