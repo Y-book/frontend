@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import { CircularProgress, List, TextField } from '@mui/material';
-
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -87,8 +86,7 @@ const Friendship: React.FC = () => {
               .catch(function (error) {
                 console.log(error);
               });
-        }
-        
+        }        
     }
 
     return (
@@ -140,7 +138,6 @@ const Friendship: React.FC = () => {
                             </List>
                         </TabPanel>
                     </Box>
-
                     </div>
                 </div>
             </div>

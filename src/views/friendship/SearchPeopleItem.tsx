@@ -26,7 +26,7 @@ const SearchPeopleItem: React.FC<SearchPeopleItemProps> = (props) => {
 
     function sendRequest () {        
         axios.post('/friendships', {toId: friendShipRequest.id})
-            .then(function (response) {
+            .then(() => {
                 props.getFriends(props.setTotalFriendsList, props.setFriendDemands, props.setFriendList, props.setLoading);
                 props.setSearchResponse(props.searchResponse.filter((user) => user.id !== friendShipRequest.id));
             })

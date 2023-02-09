@@ -88,7 +88,6 @@ const FriendDemandItem: React.FC<FriendsListAndDemandItemProps> = (props) => {
                                 <CloseIcon />
                         </IconButton>
                     </div>
-                    
                 }
                 disablePadding
             >

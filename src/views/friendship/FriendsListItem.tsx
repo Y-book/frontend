@@ -36,7 +36,7 @@ const FriendsListItem: React.FC<FriendsListAndDemandItemProps> = (props) => {
     function remove () {
         if (!friend) return alert('Une erreur est survenue !')
         axios.delete('/friendships/' + friendShip.id)
-        .then(function (response) {
+        .then(() => {
             props.getFriends(props.setTotalFriendsList, props.setFriendDemands, props.setFriendList, props.setLoading);
         })
         .catch(function (error) {
