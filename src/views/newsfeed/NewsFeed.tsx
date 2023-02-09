@@ -7,7 +7,7 @@ import axios from 'axios';
 import { Post } from '../../interfaces/Types';
 import { blue } from '@mui/material/colors';
 
-const getPosts = (setPosts: React.Dispatch<React.SetStateAction<[] | Post[]>>, profile: boolean, type: string) => {
+const getPosts = (setPosts: React.Dispatch<React.SetStateAction<[] | Post[]>>, profile: boolean, type: string) => {    
     if (profile && type === 'posts') {
         setPosts([]);
         axios.get('/posts')
@@ -44,7 +44,7 @@ const getPosts = (setPosts: React.Dispatch<React.SetStateAction<[] | Post[]>>, p
         setPosts([]);
         axios.get('/posts/likes')
         .then(function (response) {
-            const posts = response.data;        
+            const posts = response.data;      
             if (posts.length > 1) {
                 posts.sort((post1: Post, post2: Post) => {
                     return post2.id - post1.id;

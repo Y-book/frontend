@@ -29,7 +29,6 @@ const SignupCode: React.FC = () => {
         };
         axios.post('/users', data)
           .then(function (response) {
-            console.log(response);
           })
           .catch(function (error) {
             console.log(error);
@@ -46,7 +45,7 @@ const SignupCode: React.FC = () => {
 
             const cognitoUser = new CognitoUser(userData);
 
-            cognitoUser.confirmRegistration(code, true, function (err, result) {
+            cognitoUser.confirmRegistration(code, true, function (err) {
                 if (err) {
                     alert("Le code est incorrect");
                     return;

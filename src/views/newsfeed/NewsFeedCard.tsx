@@ -22,7 +22,7 @@ import Comments from '../comments/Comments';
 import { useNavigate } from 'react-router-dom';
 import "./NewsFeed.css";
 import parse from 'html-react-parser';
-import { ExpandMoreProps, PostsProps, User } from '../../interfaces/Types';
+import { ExpandMoreProps, Like, PostsProps } from '../../interfaces/Types';
   
   const ExpandMore = styled((props: ExpandMoreProps) => {
     const { expand, ...other } = props;
@@ -64,7 +64,7 @@ const NewsFeedCard: React.FC<PostsProps> = (props) => {
     const [text, setText] = React.useState(props.post.htmlContent);
     const [like, setLike] = React.useState(false);
     const [likeCount, setLikeCount] = React.useState(props.post._count.postLikes);
-    const [likeData, setLikeData] = React.useState<any>({});
+    const [likeData, setLikeData] = React.useState<Like | any>({});
     const [comments, setComments] = React.useState([...props.post.postComments]);
     const [comment, setComment] = React.useState('');
     const post = props.post;
@@ -122,7 +122,7 @@ const NewsFeedCard: React.FC<PostsProps> = (props) => {
         };
         
         axios.patch('/posts/' + post.id, data)
-        .then(function (response) {
+        .then(function () {
             setEdit(false);
             post.htmlContent = text;
         })

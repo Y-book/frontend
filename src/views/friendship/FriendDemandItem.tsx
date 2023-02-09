@@ -38,7 +38,7 @@ const FriendDemandItem: React.FC<FriendsListAndDemandItemProps> = (props) => {
     function accept() {
         if (!friend) return alert('Une erreur est survenue !')
         axios.patch('/friendships', {fromId: friend.id, status: 'ACCEPTED'})
-            .then(function (response) {
+            .then(function () {
                 props.getFriends(props.setTotalFriendsList, props.setFriendDemands, props.setFriendList, props.setLoading);
             })
             .catch(function (error) {
@@ -49,7 +49,7 @@ const FriendDemandItem: React.FC<FriendsListAndDemandItemProps> = (props) => {
     function refuse() {
         if (!friend) return alert('Une erreur est survenue !')
         axios.patch('/friendships', {fromId: friend.id, status: 'IGNORED'})
-            .then(function (response) {
+            .then(function () {
                 props.getFriends(props.setTotalFriendsList, props.setFriendDemands, props.setFriendList, props.setLoading);
             })
             .catch(function (error) {
@@ -60,7 +60,7 @@ const FriendDemandItem: React.FC<FriendsListAndDemandItemProps> = (props) => {
     function remove () {
         if (!friendShipRequest) return alert('Une erreur est survenue !')
         axios.delete('/friendships/' + friendShipRequest.id)
-        .then(function (response) {
+        .then(function () {
             props.getFriends(props.setTotalFriendsList, props.setFriendDemands, props.setFriendList, props.setLoading);
         })
         .catch(function (error) {
